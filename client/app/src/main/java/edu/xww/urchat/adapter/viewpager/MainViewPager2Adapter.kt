@@ -1,4 +1,4 @@
-package edu.xww.urchat.adapter
+package edu.xww.urchat.adapter.viewpager
 
 import android.util.SparseArray
 import androidx.core.util.size
@@ -18,6 +18,5 @@ class MainViewPager2Adapter(list: SparseArray<Fragment>, fragmentActivity: Fragm
     override fun createFragment(position: Int): Fragment {
         return fragments[position]
     }
-
 
 }

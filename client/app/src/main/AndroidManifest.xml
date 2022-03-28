@@ -7,28 +7,25 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
-        android:requestLegacyExternalStorage="false"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:requestLegacyExternalStorage="false"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.UrChat">
-
         <activity
-            android:name=".ui.MainActivity">
-
-        </activity>
-
+            android:name=".ChatActivity"
+            android:exported="false" />
+        <activity android:name=".ui.activity.MainActivity"></activity>
         <activity
-            android:name=".Welcome"
+            android:name=".ui.activity.Welcome"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-
     </application>
 
 </manifest>

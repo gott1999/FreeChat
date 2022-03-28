@@ -1,8 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name" translatable="false">UrChat</string>
-    <string name="app_desc">轻量化聊天解决方案</string>
+    <string name="app_name">UrChat</string>
+    <string name="app_desc">An Easy Chat App</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="fragment_me">我的</string>
-    <string name="fragment_contact">联系人</string>
-    <string name="fragment_message">消息</string>
+    <string name="fragment_me">Me</string>
+    <string name="fragment_contact">Contacts</string>
+    <string name="fragment_message">Message</string>
+    <string name="_00_00">00:00</string>
+    <string name="title">title</string>
+    <string name="message">message</string>
+    <string name="NotFinished">NotFinished</string>
+    <string name="_404">Not Found</string>
+    <string name="_500">Client Error</string>
 </resources>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">易聊</string>
+    <string name="app_desc">轻量化聊天解决方案</string>
+    <string name="fragment_me">我的</string>
+    <string name="fragment_contact">联系人</string>
+    <string name="fragment_message">消息</string>
+    <string name="hello_blank_fragment">欢迎来到空白页</string>
+    <string name="_00_00">00:00</string>
+    <string name="NotFinished">这里还未完成</string>
+    <string name="message">消息</string>
+    <string name="title">标题</string>
+    <string name="_404">未找到资源</string>
+    <string name="_500">客户端发生错误</string>
+</resources>

@@ -1,4 +1,4 @@
-package edu.xww.urchat.ui
+﻿package edu.xww.urchat.ui.activity
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -7,7 +7,10 @@ import androidx.fragment.app.Fragment
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import edu.xww.urchat.R
-import edu.xww.urchat.fragment.MessageFragment
+import edu.xww.urchat.adapter.viewpager.MainViewPager2Adapter
+import edu.xww.urchat.ui.fragment.ContactFragment
+import edu.xww.urchat.ui.fragment.MessageFragment
+import edu.xww.urchat.ui.fragment.MineFragment
 
 class MainActivity : AppCompatActivity() {
 
@@ -18,7 +21,6 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
         init()
     }
 
@@ -28,29 +30,33 @@ class MainActivity : AppCompatActivity() {
 
         // add fragments
         fragments.put(0, MessageFragment())
-        fragments.put(1, MessageFragment())
-        fragments.put(2, MessageFragment())
+        fragments.put(1, ContactFragment())
+        fragments.put(2, MineFragment())
 
         // 获取 adapter
-        page.adapter = edu.xww.urchat.adapter.MainViewPager2Adapter(fragments, this)
+        page.adapter = MainViewPager2Adapter(fragments, this)
 
-        // 横向滑动允许，offscreenPageLimit允许加载4个fragment。防止fragment被频繁回收
+        // 水平排布
         page.orientation = ViewPager2.ORIENTATION_HORIZONTAL
-        page.offscreenPageLimit = 3
-        page.isUserInputEnabled = true
 
-        // 设置viewPage2滑动监听
-        // 改变底部导航栏选中状态
+        // offscreenPageLimit允许加载3个fragment。防止fragment被频繁回收
+        page.offscreenPageLimit = 3
+
+        // 关闭用户输入(滑动)
+        page.isUserInputEnabled = false
+
+        // 设置viewPage2滑动监听 虽然已经禁用
         page.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
                 super.onPageSelected(position)
+                // 设置导航栏
                 bottomNavigationView.menu.getItem(position).isChecked = true
             }
         })
 
         // 底部导航栏按钮监听
-        // 设置当前fragment
         bottomNavigationView.setOnItemSelectedListener {
+            // 设置view
             when (it.itemId) {
                 R.id.bottom_nav_message -> page.setCurrentItem(0, false)
                 R.id.bottom_nav_contact -> page.setCurrentItem(1, false)
