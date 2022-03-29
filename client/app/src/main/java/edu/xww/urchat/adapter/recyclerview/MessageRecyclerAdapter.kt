@@ -1,9 +1,6 @@
 package edu.xww.urchat.adapter.recyclerview
 
 import android.content.Context
-import android.content.Intent
-import android.text.Layout
-import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -12,19 +9,24 @@ import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import edu.xww.urchat.R
+import edu.xww.urchat.data.MessageBox
 import edu.xww.urchat.data.RunTimeData
 import edu.xww.urchat.helper.ImgHelper
+import edu.xww.urchat.ui.activity.ChatActivity
 
-class MessageRecyclerAdapter(context: Context): RecyclerView.Adapter<MessageRecyclerAdapter.MessageRecyclerHolder>(){
-    private var count = 0
+class MessageRecyclerAdapter(context: Context) :
+    RecyclerView.Adapter<MessageRecyclerAdapter.MessageRecyclerHolder>() {
+
     private val mContext = context
+
     private val stk = RunTimeData.RunTimeMessageBox
 
-    class MessageRecyclerHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
+    class MessageRecyclerHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val layout: ConstraintLayout = itemView.findViewById(R.id.recycler_item_layout)
         val logo: ImageView = itemView.findViewById(R.id.recycler_item_message_logo)
         val title: TextView = itemView.findViewById(R.id.recycler_item_message_title)
-        val latestMessage: TextView = itemView.findViewById(R.id.recycler_item_message_latest_message)
+        val latestMessage: TextView =
+            itemView.findViewById(R.id.recycler_item_message_latest_message)
         val latestTime: TextView = itemView.findViewById(R.id.recycler_item_message_latest_time)
     }
 
@@ -37,13 +39,18 @@ class MessageRecyclerAdapter(context: Context): RecyclerView.Adapter<MessageRecy
         holder.title.text = data.messageTitle
         holder.latestMessage.text = data.latestMessage
         holder.latestTime.text = data.latestTime
-        holder.layout.setOnClickListener {
-            Toast.makeText(mContext, data.messageId, Toast.LENGTH_SHORT).show()
-        }
+        holder.layout.setOnClickListener { ChatActivity.startInstance(mContext, data.messageId) }
+        holder.layout.setOnLongClickListener { onMessageBoxLongClicked(data) }
         ImgHelper.setUserIcon(holder.logo, data.messageLogo)
     }
 
-    override fun getItemCount(): Int { return stk.size() }
+    override fun getItemCount(): Int {
+        return stk.size()
+    }
 
+    private fun onMessageBoxLongClicked(data: MessageBox): Boolean {
+        Toast.makeText(mContext, "长按了 ${data.messageId}", Toast.LENGTH_SHORT).show()
+        return true
+    }
 
 }

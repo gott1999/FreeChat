@@ -29,9 +29,9 @@ class MainActivity : AppCompatActivity() {
         page = findViewById(R.id.main_view_pager2)
 
         // add fragments
-        fragments.put(0, MessageFragment())
-        fragments.put(1, ContactFragment())
-        fragments.put(2, MineFragment())
+        fragments.put(0, MessageFragment(this))
+        fragments.put(1, ContactFragment(this))
+        fragments.put(2, MineFragment(this))
 
         // 获取 adapter
         page.adapter = MainViewPager2Adapter(fragments, this)

@@ -13,10 +13,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.UrChat">
-        <activity
-            android:name=".ChatActivity"
-            android:exported="false" />
-        <activity android:name=".ui.activity.MainActivity"></activity>
+
+        <activity android:name=".ui.activity.ChatActivity" />
+        <activity android:name=".ui.activity.MainActivity" />
+
         <activity
             android:name=".ui.activity.Welcome"
             android:exported="true">
@@ -26,6 +26,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
     </application>
 
 </manifest>

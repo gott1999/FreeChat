@@ -1,6 +1,7 @@
 package edu.xww.urchat.ui.fragment
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -14,8 +15,8 @@ import edu.xww.urchat.R
 import edu.xww.urchat.adapter.recyclerview.MessageRecyclerAdapter
 import edu.xww.urchat.data.RunTimeData
 
-class MessageFragment : Fragment() {
-
+class MessageFragment(context: Context) : Fragment() {
+    private val mContext = context
     private var isInit = false
     private lateinit var recyclerView: RecyclerView
     private lateinit var swipeRefreshLayout: SwipeRefreshLayout
@@ -33,7 +34,6 @@ class MessageFragment : Fragment() {
         if (!isInit) {
             setParams()
             setRefreshListener()
-            setData()
             isInit = true
         }
     }
@@ -44,12 +44,7 @@ class MessageFragment : Fragment() {
         recyclerView.setHasFixedSize(true)
         recyclerView.layoutManager =
             StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL)
-    }
-
-    private fun setData() {
-        recyclerView.apply {
-            adapter = MessageRecyclerAdapter(context)
-        }
+        recyclerView.adapter = MessageRecyclerAdapter(mContext)
     }
 
     // TODO 上拉刷新资源

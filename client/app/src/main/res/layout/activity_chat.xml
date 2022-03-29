@@ -4,6 +4,35 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ChatActivity">
+    tools:context=".ui.activity.ChatActivity">
+
+    <include
+        android:id="@+id/activity_chat_head_part"
+        layout="@layout/activity_chat_head"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ListView
+        android:id="@+id/activity_chat_message_list_view"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:text="@string/NotFinished"
+        app:layout_constraintBottom_toTopOf="@+id/activity_chat_foot_part"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/activity_chat_head_part" />
+
+    <include
+        android:id="@+id/activity_chat_foot_part"
+        layout="@layout/activity_chat_foot"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

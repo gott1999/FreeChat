@@ -48,7 +48,7 @@ class MessageStack {
     /**
      * size
      */
-    private var size : Int = 0
+    private var size: Int = 0
 
     /**
      * 哨兵  头为栈底 尾为栈顶
@@ -69,15 +69,16 @@ class MessageStack {
     /**
      * get Size
      */
-    public fun size() : Int{
+    public fun size(): Int {
         return size
     }
 
     /**
-     * 根据是栈中第几个(0 开始) 获取这个相对于栈底的举例
-     * 再根据到栈底的距离 获取节点
+     * 根据是栈中第几个(0 开始) 获取这个相对于栈底的距离 size - no - 1
+     * 再根据到栈底的距离 获取id
+     * 根据id 拿节点
      */
-    public fun get(no : Int) : MessageBox? {
+    public fun get(no: Int): MessageBox? {
         val id = indexToId[size - no - 1]
         val node = idToNode[id]
         if (null != node) {
@@ -86,10 +87,14 @@ class MessageStack {
         return null
     }
 
+    public fun getById(id: String): MessageBox? {
+        return idToNode[id]?.box
+    }
+
     /**
      * 添加节点
      */
-    public fun push(box : MessageBox) {
+    public fun push(box: MessageBox) {
         val node = MessageStackNode(box)
         val id = box.messageId
         indexToId[size] = id
@@ -102,7 +107,7 @@ class MessageStack {
     /**
      * 批量添加
      */
-    public fun pushAll (boxes : Array<MessageBox>) {
+    public fun pushAll(boxes: Array<MessageBox>) {
         for (box in boxes) push(box)
     }
 
@@ -119,18 +124,18 @@ class MessageStack {
     /**
      * 删除数据结构中一个节点
      */
-    public fun remove(messageId : String) {
+    public fun remove(messageId: String) {
         val node = idToNode[messageId] ?: return
         size--
-        var next = node.next
-        node.prev?.next = node.next
+        val next = node.next
+        node.prev?.next = next
         node.next?.prev = node.prev
     }
 
     /**
      * 更新数据结构中的内容
      */
-    public fun update(messageBox: MessageBox) : Boolean{
+    public fun update(messageBox: MessageBox): Boolean {
         val node = idToNode[messageBox.messageId]
         if (null != node) {
             node.update(messageBox)
@@ -146,9 +151,9 @@ class MessageStack {
      * 移动到栈顶
      * TODO 更新集合的映射顺序关系
      */
-    private fun moveToTail(node: MessageStackNode) : Boolean{
-        var next = node.next
-        node.prev?.next = node.next
+    private fun moveToTail(node: MessageStackNode): Boolean {
+        val next = node.next
+        node.prev?.next = next
         node.next?.prev = node.prev
 
 
