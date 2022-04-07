@@ -1,4 +1,4 @@
-package edu.xww.urchat.data
+package edu.xww.urchat.data.struct
 
 class MessageStack {
 
@@ -27,6 +27,13 @@ class MessageStack {
 
         public fun update(newBox: MessageBox) {
             box = newBox
+        }
+
+        public fun clear() {
+            id = null
+            box = null
+            prev = null
+            next = null
         }
     }
 
@@ -163,6 +170,24 @@ class MessageStack {
         tail.prev = node
 
         return true
+    }
+
+
+    public fun clear() {
+        indexToId.clear()
+        idToIndex.clear()
+        idToNode.clear()
+
+        var curr: MessageStackNode? = head.next
+        var next: MessageStackNode? = null
+        while (null != curr) {
+            next = curr.next
+            curr.clear()
+            curr = next
+        }
+
+        head.clear()
+        tail.clear()
     }
 
 }

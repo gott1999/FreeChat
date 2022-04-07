@@ -8,6 +8,7 @@ import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import edu.xww.urchat.R
 import edu.xww.urchat.adapter.viewpager.MainViewPager2Adapter
+import edu.xww.urchat.data.runtime.MessageData
 import edu.xww.urchat.ui.fragment.ContactFragment
 import edu.xww.urchat.ui.fragment.MessageFragment
 import edu.xww.urchat.ui.fragment.MineFragment
@@ -25,6 +26,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun init() {
+        // 获取组件
         bottomNavigationView = findViewById(R.id.main_navigation)
         page = findViewById(R.id.main_view_pager2)
 

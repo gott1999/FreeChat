@@ -9,8 +9,8 @@ import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import edu.xww.urchat.R
-import edu.xww.urchat.data.MessageBox
-import edu.xww.urchat.data.RunTimeData
+import edu.xww.urchat.data.struct.MessageBox
+import edu.xww.urchat.data.runtime.MessageData
 import edu.xww.urchat.helper.ImgHelper
 import edu.xww.urchat.ui.activity.ChatActivity
 
@@ -19,7 +19,7 @@ class MessageRecyclerAdapter(context: Context) :
 
     private val mContext = context
 
-    private val stk = RunTimeData.RunTimeMessageBox
+    private val stk = MessageData.runTimeMessageBox
 
     class MessageRecyclerHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val layout: ConstraintLayout = itemView.findViewById(R.id.recycler_item_layout)

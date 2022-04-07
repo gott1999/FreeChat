@@ -7,6 +7,7 @@
         <entry key="..\:/workspace/UrChat/client/app/src/main/res/drawable/ic_baseline_add_24.xml" value="0.142" />
         <entry key="..\:/workspace/UrChat/client/app/src/main/res/drawable/ic_baseline_emoji_emotions_24.xml" value="0.142" />
         <entry key="..\:/workspace/UrChat/client/app/src/main/res/drawable/ic_baseline_menu_24.xml" value="0.142" />
+        <entry key="..\:/workspace/UrChat/client/app/src/main/res/drawable/ic_baseline_menu_24_selector.xml" value="0.142" />
         <entry key="..\:/workspace/UrChat/client/app/src/main/res/drawable/ic_baseline_menu_open_24.xml" value="0.142" />
         <entry key="..\:/workspace/UrChat/client/app/src/main/res/drawable/ic_launcher_background.xml" value="0.202" />
         <entry key="..\:/workspace/UrChat/client/app/src/main/res/drawable/ic_me.xml" value="0.202" />
@@ -22,9 +23,12 @@
         <entry key="..\:/workspace/UrChat/client/app/src/main/res/drawable/ic_outline_video_call_24.xml" value="0.142" />
         <entry key="..\:/workspace/UrChat/client/app/src/main/res/drawable/ic_phone.xml" value="0.142" />
         <entry key="..\:/workspace/UrChat/client/app/src/main/res/drawable/main_selector.xml" value="0.202" />
+        <entry key="..\:/workspace/UrChat/client/app/src/main/res/layout-w1240dp/activity_login.xml" value="0.16298527443105756" />
+        <entry key="..\:/workspace/UrChat/client/app/src/main/res/layout-w936dp/activity_login.xml" value="0.190234375" />
         <entry key="..\:/workspace/UrChat/client/app/src/main/res/layout/activity_chat.xml" value="0.2" />
         <entry key="..\:/workspace/UrChat/client/app/src/main/res/layout/activity_chat_foot.xml" value="0.20820863616930313" />
         <entry key="..\:/workspace/UrChat/client/app/src/main/res/layout/activity_chat_head.xml" value="0.20820863616930313" />
+        <entry key="..\:/workspace/UrChat/client/app/src/main/res/layout/activity_login.xml" value="0.20820863616930313" />
         <entry key="..\:/workspace/UrChat/client/app/src/main/res/layout/activity_main.xml" value="0.2" />
         <entry key="..\:/workspace/UrChat/client/app/src/main/res/layout/activity_welcome.xml" value="0.2" />
         <entry key="..\:/workspace/UrChat/client/app/src/main/res/layout/fragment_message.xml" value="0.176" />

@@ -1,4 +1,4 @@
-package edu.xww.urchat.data
+package edu.xww.urchat.data.struct
 
 data class MessageBox(
     var messageId: String = "-1",

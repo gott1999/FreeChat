@@ -13,7 +13,6 @@ import androidx.recyclerview.widget.*
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import edu.xww.urchat.R
 import edu.xww.urchat.adapter.recyclerview.MessageRecyclerAdapter
-import edu.xww.urchat.data.RunTimeData
 
 class MessageFragment(context: Context) : Fragment() {
     private val mContext = context
@@ -47,12 +46,11 @@ class MessageFragment(context: Context) : Fragment() {
         recyclerView.adapter = MessageRecyclerAdapter(mContext)
     }
 
-    // TODO 上拉刷新资源
     @SuppressLint("NotifyDataSetChanged")
     private fun setRefreshListener() {
         swipeRefreshLayout.setOnRefreshListener {
             Handler(Looper.getMainLooper()).postDelayed({
-                // update RunTimeData
+                // TODO update RunTimeData
 
 
                 recyclerView.adapter?.notifyDataSetChanged()
@@ -60,5 +58,10 @@ class MessageFragment(context: Context) : Fragment() {
             }, 1000)
         }
     }
+
+    private fun updateRunTimeData() {
+
+    }
+
 
 }

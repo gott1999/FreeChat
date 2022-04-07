@@ -21,7 +21,7 @@
         android:paddingStart="5dp"
         android:paddingEnd="5dp"
         android:text="@string/app_name"
-        android:textSize="25sp"
+        android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/fragment_message_head_settings"
         app:layout_constraintStart_toEndOf="@+id/fragment_message_head_icon"
