@@ -9,7 +9,7 @@
     <string name="_00_00">00:00</string>
     <string name="title">title</string>
     <string name="message">message</string>
-    <string name="NotFinished">NotFinished</string>
+    <string name="NotFinished">Not yet finished!</string>
     <string name="_404">Not Found</string>
     <string name="_500">Client Error</string>
     <string name="title_activity_login">LoginActivity</string>
@@ -22,4 +22,9 @@
     <string name="invalid_username">Not a valid username</string>
     <string name="invalid_password">Password must be >5 characters</string>
     <string name="login_failed">"Login failed"</string>
+    <string name="send_message">Send</string>
+    <string name="make_a_video_all">Make a video all</string>
+    <string name="input_message" >Input Message</string>
+    <string name="send_failed">Send failed</string>
+    <string name="uname_pwd_too_shrot">The password and username cannot be less than 6 digits</string>
 </resources>

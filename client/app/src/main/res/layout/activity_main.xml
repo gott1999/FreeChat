@@ -19,6 +19,8 @@
         android:id="@+id/main_navigation"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
         android:background="#DFFFFFFF"
         app:itemIconTint="@drawable/main_selector"
         app:itemTextColor="@drawable/main_selector"

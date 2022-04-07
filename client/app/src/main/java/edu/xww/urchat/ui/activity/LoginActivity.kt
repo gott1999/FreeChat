@@ -25,16 +25,25 @@ class LoginActivity : AppCompatActivity() {
         val loginButton: Button = findViewById(R.id.login_bottom)
 
         loginButton.setOnClickListener {
-            val res = loginRepository.login(
-                username.text.toString(),
-                hash(password.text.toString())
-            )
-            if (res is Result.Success) {
-                startActivity(Intent(this, Welcome::class.java))
-                finish()
+            if (username.text.length > 6 && password.text.length > 6 ) {
+
+                val res = loginRepository.login(
+                    username.text.toString(),
+                    hash(password.text.toString())
+                )
+
+                if (res is Result.Success) {
+                    startActivity(Intent(this, Welcome::class.java))
+                    finish()
+                } else {
+                    Toast.makeText(this, "Login Fail!", Toast.LENGTH_SHORT).show()
+                }
+
             } else {
-                Toast.makeText(this, "Login Fail!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, R.string.uname_pwd_too_shrot, Toast.LENGTH_SHORT).show()
             }
+
+
         }
     }
 

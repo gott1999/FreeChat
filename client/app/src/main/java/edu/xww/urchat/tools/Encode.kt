@@ -1,33 +1,28 @@
-package edu.xww.urchat.tools;
+package edu.xww.urchat.tools
 
-import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
+import java.lang.Exception
+import java.lang.StringBuilder
+import java.nio.charset.StandardCharsets
+import java.security.MessageDigest
 
-public class Encode {
 
-    public static String hash(String inputs) {
-        return hash(inputs, "SHA-256");
-    }
+object Encode {
 
-    public static String hash(String inputs, String algorithm) {
-        StringBuilder res = new StringBuilder();
-
+    fun hash(inputs: String, algorithm: String = "SHA-256"): String {
+        val res = StringBuilder()
         try {
-            MessageDigest instance = MessageDigest.getInstance(algorithm);
-            byte[] newBytes = instance.digest(inputs.getBytes(StandardCharsets.UTF_8));
-
-            String temp;
-            for (byte b: newBytes) {
-                temp = Integer.toHexString(b & 0xff);
-                if (temp.length() == 1) res.append('0');
-                res.append(temp);
+            val instance = MessageDigest.getInstance(algorithm)
+            val newBytes = instance.digest(inputs.toByteArray(StandardCharsets.UTF_8))
+            var temp: String
+            for (b in newBytes) {
+                temp = Integer.toHexString(b.toInt() and 0xff)
+                if (temp.length == 1) res.append('0')
+                res.append(temp)
             }
-
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (e: Exception) {
+            res.clear()
+            e.printStackTrace()
         }
-
-        return res.toString();
+        return res.toString()
     }
-
 }

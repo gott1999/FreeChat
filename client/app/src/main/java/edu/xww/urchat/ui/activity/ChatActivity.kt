@@ -4,20 +4,37 @@ import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.ImageView
-import android.widget.TextView
-import android.widget.Toast
+import android.view.View
+import android.widget.*
+import androidx.core.widget.doAfterTextChanged
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import edu.xww.urchat.R
-import edu.xww.urchat.data.struct.MessageBox
-import edu.xww.urchat.data.runtime.MessageData
+import edu.xww.urchat.adapter.recyclerview.ChatMessageAdapter
+import edu.xww.urchat.data.struct.Message
+import edu.xww.urchat.data.struct.Message.Companion.sendNormalText
 import java.lang.Exception
 
-class ChatActivity : AppCompatActivity() {
+class ChatActivity : AppCompatActivity(), View.OnClickListener {
 
-    private var messageBox = MessageBox()
+    private var messageId = ""
 
-    companion object{
-        fun startInstance(context: Context, messageId: String){
+    private val messageList = ArrayList<Message>()
+
+    private lateinit var recyclerView: RecyclerView
+
+    /**
+     * While
+     * type == 0 means default.
+     * type == 1 means send message.
+     */
+    private var functionKeyType = 0
+
+    companion object {
+        /**
+         * Use startInstance to start this instance
+         */
+        fun startInstance(context: Context, messageId: String) {
             val appContext = context.applicationContext
             val intent = Intent(appContext, ChatActivity::class.java)
             intent.putExtra("messageId", messageId)
@@ -30,35 +47,131 @@ class ChatActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chat)
         initData()
-        showView()
-
-        // 返回
-        val back = findViewById<ImageView>(R.id.activity_chat_head_back)
-        back.setOnClickListener { this.finish() }
-
-        // 菜单
-        val menu = findViewById<ImageView>(R.id.activity_chat_head_menu)
-        menu.setOnClickListener {  }
-
-
+        bindViews()
+        bindAdapter()
     }
+
 
     private fun initData() {
         try {
-            val s = intent.getSerializableExtra("messageId") as String
-            messageBox = MessageData.runTimeMessageBox.getById(s)!!
-        } catch (e : Exception) {
+            // TODO get message
+            messageId = intent.getSerializableExtra("messageId") as String
+
+
+        } catch (e: Exception) {
             e.printStackTrace()
             Toast.makeText(this, R.string._404, Toast.LENGTH_LONG).show()
         }
     }
 
-    private fun showView() {
-        if (messageBox.messageId == "-1") return
+    private fun bindViews() {
+        // back icon
+        val back: ImageView = findViewById(R.id.activity_chat_head_back)
+        back.setOnClickListener(this)
 
-        val textView = findViewById<TextView>(R.id.activity_chat_head_message_title)
-        textView.text = messageBox.messageTitle
+        // menu icon
+        val menu: ImageView = findViewById(R.id.activity_chat_head_menu)
+        menu.setOnClickListener(this)
 
+        // title
+        val title: TextView = findViewById(R.id.activity_chat_head_message_title)
+        // TODO get title text
+        title.text = messageId
+        title.setOnClickListener(this)
+
+        // video_call icon
+        val call: ImageView = findViewById(R.id.activity_chat_foot_video_call)
+        call.setOnClickListener(this)
+
+        // emoji icon
+        val emoji: ImageView = findViewById(R.id.activity_chat_foot_emoji_emotions)
+        emoji.setOnClickListener(this)
+
+        // function_key icon
+        val functionKey: ImageView = findViewById(R.id.activity_chat_foot_function_keys)
+        functionKey.setOnClickListener(this)
+
+        // message witch user inputs
+        val editText: EditText = findViewById(R.id.activity_chat_foot_input)
+        editText.doAfterTextChanged { onTextChanged(it.toString().length, functionKey) }
     }
 
+    private fun onTextChanged(count: Int, functionKey: ImageView) {
+        functionKeyType = if (count > 0) {
+            functionKey.setImageResource(R.drawable.ic_outline_send_24)
+            1
+        } else {
+            functionKey.setImageResource(R.drawable.ic_outline_add_circle_outline_24)
+            0
+        }
+    }
+
+    private fun bindAdapter() {
+        recyclerView = findViewById(R.id.activity_chat_message_recycler_view)
+        recyclerView.layoutManager = LinearLayoutManager(this)
+        recyclerView.adapter = ChatMessageAdapter(messageList)
+    }
+
+    override fun onClick(view: View?) {
+        when (view?.id) {
+            // activity_chat_head
+            R.id.activity_chat_head_back -> this.finish()
+            R.id.activity_chat_head_menu -> onMenuClicked()
+            R.id.activity_chat_head_message_title -> onTitleClicked()
+            // activity_chat_foot
+            R.id.activity_chat_foot_video_call -> onVideoCallClicked()
+            R.id.activity_chat_foot_emoji_emotions -> onEmojiClicked()
+            R.id.activity_chat_foot_function_keys -> onFunctionKeyClicked()
+            // others
+            else -> Toast.makeText(this, R.string.NotFinished, Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun onMenuClicked() {
+        Toast.makeText(this, R.string.NotFinished, Toast.LENGTH_SHORT).show()
+    }
+
+    private fun onTitleClicked() {
+        Toast.makeText(this, R.string.NotFinished, Toast.LENGTH_SHORT).show()
+    }
+
+    private fun onVideoCallClicked() {
+        Toast.makeText(this, R.string.NotFinished, Toast.LENGTH_SHORT).show()
+    }
+
+    private fun onEmojiClicked() {
+        Toast.makeText(this, R.string.NotFinished, Toast.LENGTH_SHORT).show()
+    }
+
+    private fun onFunctionKeyClicked() {
+        when (functionKeyType) {
+            0 -> showFunctions()
+            1 -> sendMessage()
+        }
+    }
+
+    private fun showFunctions() {
+        // TODO show functions
+        Toast.makeText(this, R.string.NotFinished, Toast.LENGTH_SHORT).show()
+    }
+
+    private fun sendMessage() {
+        val editText = findViewById<EditText>(R.id.activity_chat_foot_input)
+        val text = editText.text.toString()
+        if (text.isNotEmpty()) {
+            val message = sendNormalText(text)
+            messageList.add(message)
+            recyclerView.adapter?.notifyItemChanged(messageList.size - 1)
+            // TODO Send message
+            try {
+
+                // success
+                editText.setText("")
+            } catch (e: Exception) {
+                Toast.makeText(this, R.string.send_failed, Toast.LENGTH_SHORT).show()
+            }
+        }
+        // scroll to bottom
+        recyclerView.scrollToPosition(messageList.size - 1)
+    }
 }

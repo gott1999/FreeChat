@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:minHeight="60dp"
     android:paddingStart="5dp"
     android:paddingEnd="5dp">
 
@@ -14,16 +15,18 @@
         android:src="@drawable/ic_outline_video_call_24"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:contentDescription="@string/make_a_video_all" />
 
-    <com.google.android.material.textfield.TextInputEditText
+    <EditText
         android:id="@+id/activity_chat_foot_input"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/activity_chat_foot_emoji_emotions"
         app:layout_constraintStart_toEndOf="@+id/activity_chat_foot_video_call"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:hint="@string/input_message" />
 
     <ImageView
         android:id="@+id/activity_chat_foot_emoji_emotions"
@@ -31,11 +34,11 @@
         android:layout_height="45dp"
         android:src="@drawable/ic_outline_emoji_emotions_24"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/activity_chat_foot_add_circle"
+        app:layout_constraintEnd_toStartOf="@+id/activity_chat_foot_function_keys"
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
-        android:id="@+id/activity_chat_foot_add_circle"
+        android:id="@+id/activity_chat_foot_function_keys"
         android:layout_width="45dp"
         android:layout_height="45dp"
         android:src="@drawable/ic_outline_add_circle_outline_24"

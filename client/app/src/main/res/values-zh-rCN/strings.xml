@@ -22,4 +22,9 @@
     <string name="invalid_password">密码长度必须大于5</string>
     <string name="login_failed">登录失败</string>
     <string name="prompt_phone">手机号</string>
+    <string name="send_message">发送</string>
+    <string name="make_a_video_all">视频通话</string>
+    <string name="input_message">发送一条友善的信息</string>
+    <string name="send_failed">发送失败</string>
+    <string name="uname_pwd_too_shrot">账号密码不能小于6位</string>
 </resources>

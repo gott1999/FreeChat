@@ -12,7 +12,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.*
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import edu.xww.urchat.R
-import edu.xww.urchat.adapter.recyclerview.MessageRecyclerAdapter
+import edu.xww.urchat.adapter.recyclerview.MessageBoxAdapter
 
 class MessageFragment(context: Context) : Fragment() {
     private val mContext = context
@@ -43,7 +43,7 @@ class MessageFragment(context: Context) : Fragment() {
         recyclerView.setHasFixedSize(true)
         recyclerView.layoutManager =
             StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL)
-        recyclerView.adapter = MessageRecyclerAdapter(mContext)
+        recyclerView.adapter = MessageBoxAdapter(mContext)
     }
 
     @SuppressLint("NotifyDataSetChanged")

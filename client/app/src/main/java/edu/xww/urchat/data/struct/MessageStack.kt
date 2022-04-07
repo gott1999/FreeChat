@@ -179,7 +179,7 @@ class MessageStack {
         idToNode.clear()
 
         var curr: MessageStackNode? = head.next
-        var next: MessageStackNode? = null
+        var next: MessageStackNode?
         while (null != curr) {
             next = curr.next
             curr.clear()

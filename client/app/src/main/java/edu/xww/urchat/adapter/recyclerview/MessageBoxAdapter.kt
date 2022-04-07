@@ -14,10 +14,8 @@ import edu.xww.urchat.data.runtime.MessageData
 import edu.xww.urchat.helper.ImgHelper
 import edu.xww.urchat.ui.activity.ChatActivity
 
-class MessageRecyclerAdapter(context: Context) :
-    RecyclerView.Adapter<MessageRecyclerAdapter.MessageRecyclerHolder>() {
-
-    private val mContext = context
+class MessageBoxAdapter(private val mContext: Context) :
+    RecyclerView.Adapter<MessageBoxAdapter.MessageRecyclerHolder>() {
 
     private val stk = MessageData.runTimeMessageBox
 

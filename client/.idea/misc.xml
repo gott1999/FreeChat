@@ -19,6 +19,7 @@
         <entry key="..\:/workspace/UrChat/client/app/src/main/res/drawable/ic_outline_emoji_emotions_24.xml" value="0.142" />
         <entry key="..\:/workspace/UrChat/client/app/src/main/res/drawable/ic_outline_message_24.xml" value="0.142" />
         <entry key="..\:/workspace/UrChat/client/app/src/main/res/drawable/ic_outline_people_outline_24.xml" value="0.142" />
+        <entry key="..\:/workspace/UrChat/client/app/src/main/res/drawable/ic_outline_send_24.xml" value="0.142" />
         <entry key="..\:/workspace/UrChat/client/app/src/main/res/drawable/ic_outline_settings_24.xml" value="0.142" />
         <entry key="..\:/workspace/UrChat/client/app/src/main/res/drawable/ic_outline_video_call_24.xml" value="0.142" />
         <entry key="..\:/workspace/UrChat/client/app/src/main/res/drawable/ic_phone.xml" value="0.142" />
@@ -26,8 +27,11 @@
         <entry key="..\:/workspace/UrChat/client/app/src/main/res/layout-w1240dp/activity_login.xml" value="0.16298527443105756" />
         <entry key="..\:/workspace/UrChat/client/app/src/main/res/layout-w936dp/activity_login.xml" value="0.190234375" />
         <entry key="..\:/workspace/UrChat/client/app/src/main/res/layout/activity_chat.xml" value="0.2" />
-        <entry key="..\:/workspace/UrChat/client/app/src/main/res/layout/activity_chat_foot.xml" value="0.20820863616930313" />
+        <entry key="..\:/workspace/UrChat/client/app/src/main/res/layout/activity_chat_foot.xml" value="0.2" />
+        <entry key="..\:/workspace/UrChat/client/app/src/main/res/layout/activity_chat_foot_send.xml" value="1.0" />
         <entry key="..\:/workspace/UrChat/client/app/src/main/res/layout/activity_chat_head.xml" value="0.20820863616930313" />
+        <entry key="..\:/workspace/UrChat/client/app/src/main/res/layout/activity_chat_message_left.xml" value="0.12825994014536127" />
+        <entry key="..\:/workspace/UrChat/client/app/src/main/res/layout/activity_chat_message_right.xml" value="0.2" />
         <entry key="..\:/workspace/UrChat/client/app/src/main/res/layout/activity_login.xml" value="0.20820863616930313" />
         <entry key="..\:/workspace/UrChat/client/app/src/main/res/layout/activity_main.xml" value="0.2" />
         <entry key="..\:/workspace/UrChat/client/app/src/main/res/layout/activity_welcome.xml" value="0.2" />
@@ -36,6 +40,7 @@
         <entry key="..\:/workspace/UrChat/client/app/src/main/res/layout/fragment_message_head.xml" value="0.20820863616930313" />
         <entry key="..\:/workspace/UrChat/client/app/src/main/res/layout/recycle_item_message.xml" value="0.264" />
         <entry key="..\:/workspace/UrChat/client/app/src/main/res/menu/menu_main.xml" value="0.25364583333333335" />
+        <entry key="..\:/workspace/UrChat/client/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.142" />
         <entry key="..\:/workspace/UrChat/client/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" value="0.202" />
       </map>
     </option>
