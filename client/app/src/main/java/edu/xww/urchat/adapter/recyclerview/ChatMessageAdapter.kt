@@ -34,6 +34,11 @@ class ChatMessageAdapter(private val messageList: ArrayList<Message>) :
             Message.MessageType.SEND_TEXT_NORMAL.ordinal -> view.findViewById(R.id.activity_chat_message_right_text)
             else -> throw IllegalArgumentException("Error argument during instancing 'NormalImageViewHolder'!")
         }
+
+        init {
+            normaImageView.maxWidth = maxWidth
+            normaImageView.maxWidth = maxHeight
+        }
     }
 
     override fun getItemViewType(position: Int): Int = messageList[position].typeId
@@ -58,10 +63,28 @@ class ChatMessageAdapter(private val messageList: ArrayList<Message>) :
         }
 
         return when (viewType) {
-            Message.MessageType.SEND_TEXT_NORMAL.ordinal -> NormalTextViewHolder(view, viewType, maxMessageWidth)
-            Message.MessageType.RECEIVE_TEXT_NORMAL.ordinal -> NormalTextViewHolder(view, viewType, maxMessageWidth)
-            Message.MessageType.SEND_IMAGE_NORMAL.ordinal -> NormalImageViewHolder(view, viewType, maxMessageWidth,maxMessageHeight)
-            Message.MessageType.RECEIVE_IMAGE_NORMAL.ordinal -> NormalImageViewHolder(view, viewType, maxMessageWidth,maxMessageHeight)
+            Message.MessageType.SEND_TEXT_NORMAL.ordinal -> NormalTextViewHolder(
+                view,
+                viewType,
+                maxMessageWidth
+            )
+            Message.MessageType.RECEIVE_TEXT_NORMAL.ordinal -> NormalTextViewHolder(
+                view,
+                viewType,
+                maxMessageWidth
+            )
+            Message.MessageType.SEND_IMAGE_NORMAL.ordinal -> NormalImageViewHolder(
+                view,
+                viewType,
+                maxMessageWidth,
+                maxMessageHeight
+            )
+            Message.MessageType.RECEIVE_IMAGE_NORMAL.ordinal -> NormalImageViewHolder(
+                view,
+                viewType,
+                maxMessageWidth,
+                maxMessageHeight
+            )
             else -> throw IllegalArgumentException("Unknown 'MessageType' during creating 'ViewHolder'!")
         }
     }
@@ -76,6 +99,5 @@ class ChatMessageAdapter(private val messageList: ArrayList<Message>) :
     }
 
     override fun getItemCount(): Int = messageList.size
-
 
 }

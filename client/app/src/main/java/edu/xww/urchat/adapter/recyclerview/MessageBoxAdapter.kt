@@ -28,9 +28,8 @@ class MessageBoxAdapter(private val mContext: Context) :
         val latestTime: TextView = itemView.findViewById(R.id.recycler_item_message_latest_time)
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MessageRecyclerHolder {
-        return MessageRecyclerHolder(View.inflate(mContext, R.layout.recycle_item_message, null))
-    }
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MessageRecyclerHolder =
+        MessageRecyclerHolder(View.inflate(mContext, R.layout.recycle_item_message, null))
 
     override fun onBindViewHolder(holder: MessageRecyclerHolder, position: Int) {
         val data = stk.get(position) ?: return
@@ -42,9 +41,7 @@ class MessageBoxAdapter(private val mContext: Context) :
         ImgHelper.setUserIcon(holder.logo, data.messageLogo)
     }
 
-    override fun getItemCount(): Int {
-        return stk.size()
-    }
+    override fun getItemCount(): Int = stk.size()
 
     private fun onMessageBoxLongClicked(data: MessageBox): Boolean {
         Toast.makeText(mContext, "长按了 ${data.messageId}", Toast.LENGTH_SHORT).show()
