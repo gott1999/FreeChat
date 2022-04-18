@@ -1,9 +1,10 @@
 package edu.xww.urchat.ui.fragment
 
+import android.content.Context
 import androidx.recyclerview.widget.RecyclerView
 import edu.xww.urchat.R
 
-class ContactFragment() : BaseFragment(R.layout.fragment_contact) {
+class ContactFragment(private val m_Context: Context) : BaseFragment(R.layout.fragment_contact) {
 
     private lateinit var recyclerView: RecyclerView
 

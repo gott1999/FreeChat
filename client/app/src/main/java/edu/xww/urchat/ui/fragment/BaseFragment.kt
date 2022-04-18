@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 
-open class BaseFragment(private val resource: Int) : Fragment() {
+abstract class BaseFragment(private val resource: Int) : Fragment() {
 
     private var isInit = false
 
@@ -26,6 +26,6 @@ open class BaseFragment(private val resource: Int) : Fragment() {
         }
     }
 
-    open fun onInit() {}
+    abstract fun onInit()
 
 }
