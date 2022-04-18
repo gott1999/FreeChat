@@ -29,7 +29,7 @@ class MessageBoxAdapter(private val mContext: Context) :
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MessageRecyclerHolder =
-        MessageRecyclerHolder(View.inflate(mContext, R.layout.recycle_item_message, null))
+        MessageRecyclerHolder(View.inflate(mContext, R.layout.fragment_message_items, null))
 
     override fun onBindViewHolder(holder: MessageRecyclerHolder, position: Int) {
         val data = stk.get(position) ?: return

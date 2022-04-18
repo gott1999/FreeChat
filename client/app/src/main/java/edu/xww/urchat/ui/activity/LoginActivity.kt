@@ -40,7 +40,7 @@ class LoginActivity : AppCompatActivity() {
                 }
 
             } else {
-                Toast.makeText(this, R.string.uname_pwd_too_shrot, Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, R.string.uname_pwd_too_short, Toast.LENGTH_SHORT).show()
             }
 
 

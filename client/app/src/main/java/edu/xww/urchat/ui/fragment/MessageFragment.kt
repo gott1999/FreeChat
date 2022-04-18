@@ -2,39 +2,21 @@ package edu.xww.urchat.ui.fragment
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import androidx.recyclerview.widget.*
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import edu.xww.urchat.R
 import edu.xww.urchat.adapter.recyclerview.MessageBoxAdapter
 
-class MessageFragment(context: Context) : Fragment() {
-    private val mContext = context
-    private var isInit = false
+class MessageFragment(private val m_Context: Context) : BaseFragment(R.layout.fragment_message) {
+
     private lateinit var recyclerView: RecyclerView
     private lateinit var swipeRefreshLayout: SwipeRefreshLayout
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_message, container, false)
-    }
-
-    override fun onResume() {
-        super.onResume()
-        if (!isInit) {
-            setParams()
-            setRefreshListener()
-            isInit = true
-        }
+    override fun onInit() {
+        setParams()
+        setRefreshListener()
     }
 
     private fun setParams() {
@@ -43,7 +25,7 @@ class MessageFragment(context: Context) : Fragment() {
         recyclerView.setHasFixedSize(true)
         recyclerView.layoutManager =
             StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL)
-        recyclerView.adapter = MessageBoxAdapter(mContext)
+        recyclerView.adapter = MessageBoxAdapter(m_Context)
     }
 
     @SuppressLint("NotifyDataSetChanged")
