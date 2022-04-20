@@ -1,4 +1,4 @@
-package edu.xww.urchat.data.struct
+package edu.xww.urchat.data.struct.security
 
 import java.security.Key
 import java.security.PrivateKey

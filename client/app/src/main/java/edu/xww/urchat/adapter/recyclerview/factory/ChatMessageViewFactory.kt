@@ -1,11 +1,10 @@
-package edu.xww.urchat.adapter.recyclerview
+package edu.xww.urchat.adapter.recyclerview.factory
 
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.recyclerview.widget.RecyclerView
 import edu.xww.urchat.R
-import edu.xww.urchat.data.struct.Message
+import edu.xww.urchat.data.struct.user.Message
 import java.lang.IllegalArgumentException
 
 class ChatMessageViewFactory {

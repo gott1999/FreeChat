@@ -9,7 +9,6 @@
         android:id="@+id/recycler_item_message_logo"
         android:layout_width="45dp"
         android:layout_height="45dp"
-        android:src="@drawable/ic_outline_account_circle_24"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -31,8 +30,7 @@
             android:id="@+id/recycler_item_message_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingTop="5dp"
-            android:text="@string/title" />
+            android:paddingTop="5dp" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -44,7 +42,6 @@
                 android:id="@+id/recycler_item_message_latest_message"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:text="@string/message"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/recycler_item_message_latest_time"
                 app:layout_constraintStart_toStartOf="parent"
@@ -54,7 +51,6 @@
                 android:id="@+id/recycler_item_message_latest_time"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:text="@string/_00_00"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />

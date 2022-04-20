@@ -11,13 +11,15 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import edu.xww.urchat.R
 import edu.xww.urchat.adapter.recyclerview.ChatMessageAdapter
-import edu.xww.urchat.data.struct.Message
-import edu.xww.urchat.data.struct.Message.Companion.sendNormalText
+import edu.xww.urchat.data.struct.user.Message
+import edu.xww.urchat.data.struct.user.Message.Companion.sendNormalText
 import java.lang.Exception
 
 class ChatActivity : AppCompatActivity(), View.OnClickListener {
 
     private var messageId = ""
+
+    private var displayTitle = ""
 
     private val messageList = ArrayList<Message>()
 
@@ -34,10 +36,11 @@ class ChatActivity : AppCompatActivity(), View.OnClickListener {
         /**
          * Use startInstance to start this instance
          */
-        fun startInstance(context: Context, messageId: String) {
+        fun startInstance(context: Context, messageId: String, displayName: String) {
             val appContext = context.applicationContext
             val intent = Intent(appContext, ChatActivity::class.java)
             intent.putExtra("messageId", messageId)
+            intent.putExtra("displayName", displayName)
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
             appContext.startActivity(intent)
         }
@@ -54,10 +57,9 @@ class ChatActivity : AppCompatActivity(), View.OnClickListener {
 
     private fun initData() {
         try {
-            // TODO get message
             messageId = intent.getSerializableExtra("messageId") as String
-
-
+            displayTitle = intent.getSerializableExtra("displayName") as String
+            // TODO get data
         } catch (e: Exception) {
             e.printStackTrace()
             Toast.makeText(this, R.string._404, Toast.LENGTH_LONG).show()
@@ -75,8 +77,7 @@ class ChatActivity : AppCompatActivity(), View.OnClickListener {
 
         // title
         val title: TextView = findViewById(R.id.activity_chat_head_message_title)
-        // TODO get title text
-        title.text = messageId
+        title.text = displayTitle
         title.setOnClickListener(this)
 
         // video_call icon

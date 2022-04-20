@@ -1,4 +1,4 @@
-package edu.xww.urchat.data.struct
+package edu.xww.urchat.data.struct.user
 
 class MessageStack {
 

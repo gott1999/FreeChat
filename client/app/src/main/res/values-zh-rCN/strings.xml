@@ -26,6 +26,8 @@
     <string name="make_a_video_all">视频通话</string>
     <string name="input_message">发送一条友善的信息</string>
     <string name="send_failed">发送失败</string>
-    <string name="uname_pwd_too_short">账号密码不能小于6位</string>
+    <string name="uname_pwd_too_short">账号密码不能小于7位</string>
     <string name="search">搜索</string>
+    <string name="action_register_short">注册</string>
+    <string name="logged_out">登出</string>
 </resources>

@@ -5,7 +5,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import edu.xww.urchat.R
-import edu.xww.urchat.data.struct.Message
+import edu.xww.urchat.adapter.recyclerview.factory.ChatMessageViewFactory
+import edu.xww.urchat.data.struct.user.Message
 import edu.xww.urchat.helper.ImgHelper
 import java.lang.IllegalArgumentException
 

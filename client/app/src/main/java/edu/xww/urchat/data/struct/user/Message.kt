@@ -1,4 +1,4 @@
-package edu.xww.urchat.data.struct
+package edu.xww.urchat.data.struct.user
 
 class Message private constructor(
     private val m_messageType: MessageType,
