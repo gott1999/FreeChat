@@ -1,0 +1,21 @@
+syntax = "proto3";
+package UserMessage;
+
+message UserMessageReceive {
+  string MessageSrc = 1;
+  string MessageTitle = 2;
+  string LatestMessage = 4;
+  string LatestTime = 5;
+}
+
+message UserMessageItem {
+  string MessageSrc = 1;
+  string MessageDes = 2;
+  string Message = 4;
+  string Time = 5;
+}
+
+message UserMessageList {
+   repeated UserMessageItem UserMessageItems = 1;
+}
+
