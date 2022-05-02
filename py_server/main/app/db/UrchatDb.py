@@ -1,38 +1,52 @@
+# -*- coding: UTF-8 -*-
+
 from pymysql import connect
 from pymysql import cursors
 
 
-class UrchatConnector:
+properties = {
+    'host': '127.0.0.1',
+    'user': 'root',
+    'password': '123456',
+    'port': 3306,
+    'db': 'urchat_users',
+    'charset': 'utf8'
+}
 
-    properties = {
-        'host': '127.0.0.1',
-        'user': 'root',
-        'password': '123456',
-        'port': 3306,
-        'db': 'urchat_users',
-        'charset': 'utf8'
-    }
+sql_login = '''
+select uid from user_u_data where uname=%s and upassword=%s
+'''
 
-    def __init__(self):
-        self.conn = connect(**UrchatConnector.properties)
-        self.cursor = self.conn.cursor(cursor=cursors.DictCursor)
+sql_count = '''
+select count(*) from user_u_data where uname=%s
+'''
 
-    def __del__(self):
-        self.cursor.close()
-        self.conn.close()
+sql_register = '''
+insert into user_u_data(username,passwd) values(%s,%s)
+'''
 
-    def select(self, sql):
-        self.cursor.execute(sql)
-        return self.cursor.fetchall()
+sql_getContact = '''
+select 
+'''
 
-    def update(self, sql):
-        try:
-            result = self.cursor.execute(sql)
-            self.conn.commit()
-            if result == 1:
-                return True
-            else:
-                return False
-        except Exception as e:
-            print('Update Failed: %s' % e)
-            return False
+
+def login(username, password):
+    conn = connect(**properties)
+    with conn.cursor(cursor=cursors.DictCursor) as cursor:
+        cursor.execute(sql_login, (username, password))
+        res = cursor.fetchall()
+        cursor.close()
+    conn.close()
+    return res
+
+
+def register(username, password):
+    conn = connect(**properties)
+    with conn.cursor(cursor=cursors.DictCursor) as cursor:
+        cursor.execute(sql_register, (username, password))
+        conn.commit()
+        cursor.close()
+    conn.close()
+
+
+
