@@ -1,0 +1,54 @@
+﻿syntax = "proto3";
+package NetProtoc;
+
+message Protocol
+{
+  ConnectMethod method = 1;
+  ConnectType type = 2;
+  ConnectFile file_type = 4;
+
+  // 是否加急
+  bool emergency = 5;
+
+  map<string, bytes> bits = 10;
+  map<string, string> pairs = 11;
+
+  // 秒时间戳
+  uint32 millisecond_timestamp = 14;
+
+  // 版本号
+  repeated string strs = 15;
+
+}
+
+// 连接了 要干什么
+enum ConnectMethod
+{
+  LOGIN = 0;
+  REGISTER = 1;
+  MESSAGE = 3;
+  CONTRACT = 4;
+  CLOSE = 5;
+}
+
+// 连接种类
+enum ConnectType
+{
+  // 请求
+  REQUEST = 0;
+  // 响应
+  RESPONSE = 1;
+  // 中转
+  TRANSIT = 2;
+}
+
+// 传输类型
+enum ConnectFile
+{
+  TEXT = 0;
+  IMAGE = 1;
+  BIN = 2;
+}
+
+
+

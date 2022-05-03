@@ -2,6 +2,7 @@ CREATE TABLE `user_b_data`  (
   `uid` int UNSIGNED NOT NULL COMMENT 'unique id',
   `id` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '用户自定义 id',
   `display_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '显示名',
+  `icon` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci COMMENT '用户头像',
   PRIMARY KEY (`uid`) USING BTREE,
   UNIQUE INDEX `index_user_b_data_uid`(`uid` ASC) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
