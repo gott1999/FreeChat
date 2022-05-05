@@ -22,7 +22,9 @@ class MineAdaptor(
         when (item.displayName) {
             m_Context.getString(R.string.logged_out) -> {
                 LoginRepository.logout()
-                m_Context.startActivity(Intent(m_Context, Welcome::class.java))
+                val intent = Intent(m_Context, Welcome::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+                m_Context.startActivity(intent)
             }
             else -> {}
         }

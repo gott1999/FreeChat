@@ -7,42 +7,44 @@ path = 'log'
 
 
 class Logger:
-    file = None
+    fileName = None
 
     @staticmethod
     def init():
         if not os.path.exists(path):
             os.mkdir(path)
-        t = time.strftime('%Y-%m-%d-%H-%M-%S', time.localtime())
-        Logger.file = open('./%s/%s.txt' % (path, t), 'w')
-
-    @staticmethod
-    def close():
-        Logger.file.close()
-        Logger.file = None
+        if Logger.fileName is None:
+            t = time.strftime('%Y年%m月%d日 %H时%M分%S秒', time.localtime())
+            Logger.fileName = './%s/%s.txt' % (path, t)
 
     @staticmethod
     def write(msg):
-        if Logger.file is None:
+        if Logger.fileName is None:
             Logger.init()
         if not msg.endswith('\n'):
             msg += '\n'
-        Logger.file.write(msg)
+        file = open(Logger.fileName, 'a')
+        file.write(msg)
+        file.close()
 
     @staticmethod
     def log(msg=''):
-        s = '[LOG]: %s' % msg
+        s = '[LOG]: time=%s %s' % (Logger.getTime(), msg)
         print(s)
         Logger.write(s)
 
     @staticmethod
     def error(msg=''):
-        s = '[WARN]: %s' % msg
+        s = '[WARN]: time=%s %s' % (Logger.getTime(), msg)
         print(s)
         Logger.write(s)
 
     @staticmethod
     def warn(msg=''):
-        s = '[WARN]: %s' % msg
+        s = '[WARN]: %s %s' % (Logger.getTime(), msg)
         print(s)
         Logger.write(s)
+
+    @staticmethod
+    def getTime():
+        return time.strftime("Date=%Y-%m-%d Time=%H:%M:%S", time.localtime())

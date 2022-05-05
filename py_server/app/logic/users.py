@@ -1,40 +1,86 @@
 # -*- coding: UTF-8 -*-
+import os
 
 from app.db import users
-from app.logger import log
+from proto import protocol_pb2 as protoc
 
 
-def login(uname, upassword):
-    if not uname and not upassword:
+def login(uname: str, upassword: str):
+    """
+    login
+    :param uname: name
+    :param upassword: password
+    :return: {}
+    """
+    if uname and upassword:
+        rt = users.login(uname, upassword)
+        if len(rt) < 1:
+            return None
+        uid = rt[0]["uid"]
+        user_base = users.getUserBase(uid)
+        return user_base[0]
+    else:
         return None
-    res = users.login(uname, upassword)
-    if len(res) < 1:
+
+
+def register(uname: str, upassword: str):
+    """
+    register and login
+    :param uname: name
+    :param upassword: password
+    :return: {}
+    """
+    if uname and upassword:
+        res = users.register(uname, upassword)
+        if res < 1:
+            return None
+        else:
+            return login(uname, upassword)
+    else:
         return None
+
+
+def getContact(uid: str):
+    """
+    get contacts
+    :param uid: src_uid
+    :return: [{}, {}...]
+    """
+    contacts = users.getContact(uid)
+    res = {}
+    for it in contacts:
+        carry = protoc.Protocol()
+        res.valid = True
 
     return res
 
 
-def register(uname, upassword):
-    if not uname and not upassword:
-        return 0
-    res = 0
-
-    try:
-        res = users.register(uname, upassword)
-    except Exception as e:
-        res = 0
-        log.Logger.error(e)
-
-    if res < 1:
-        return 0
-    else:
-        return 1
+def getIcon(icon: str):
+    """
+    get icon
+    :param icon: icon name
+    :return: bin
+    """
+    getImage("./upload/icon/" + icon)
 
 
-def getContact(uid=''):
-    pass
+def getImg(img: str):
+    """
+    get image
+    :param img: img name
+    :return: bin
+    """
+    getImage("./upload/img/" + img)
 
 
-def getIcon(uid=''):
-    pass
-
+def getImage(path: str):
+    """
+    get image
+    :param path: path
+    :return: bin
+    """
+    res = None
+    if os.path.exists(path):
+        with open(path, 'rb') as r:
+            res = r.read()
+    return res

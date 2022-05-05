@@ -20,16 +20,24 @@ object LoginRepository {
         dataSource.logout()
     }
 
-    fun login(username: String, password: String): Result<LoggedInUser> {
-        val result = dataSource.login(username, password)
-        if (result is Result.Success) loggedInUser = result.data
+    fun login(server: String, port: Int,username: String, password: String): Result<LoggedInUser> {
+        val result = dataSource.login(server, port,username, password)
+        if (result is Result.Success) {
+            loggedInUser = result.data
+            RunTimeData.serverIp["main"] = server
+            RunTimeData.serverPort["main"] = port
+        }
         return result
     }
 
-    fun register(username: String, password: String): Result<LoggedInUser>  {
+    fun register(server: String, port: Int,username: String, password: String): Result<LoggedInUser> {
         // 未完成
-        val result = dataSource.login(username, password)
-        if (result is Result.Success) loggedInUser = result.data
+        val result = dataSource.register(server, port,username, password)
+        if (result is Result.Success) {
+            loggedInUser = result.data
+            RunTimeData.serverIp["main"] = server
+            RunTimeData.serverPort["main"] = port
+        }
         return result
     }
 

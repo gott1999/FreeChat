@@ -31,4 +31,7 @@
     <string name="search">Search</string>
     <string name="sharp" translatable="false">#</string>
     <string name="logged_out">log out</string>
+    <string name="server_ip">server</string>
+    <string name="server_port">port</string>
+    <string name="ip_error">Ip has error</string>
 </resources>

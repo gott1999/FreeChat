@@ -5,25 +5,43 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginTop="20dp"
+    android:fitsSystemWindows="true"
     tools:context=".ui.activity.LoginActivity">
 
     <ImageView
         android:id="@+id/login_ic"
         android:layout_width="150dp"
         android:layout_height="150dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="48dp"
         android:src="@drawable/ic_lau"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/login_server_ip"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+
+        android:layout_marginStart="50dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="50dp"
+        android:autofillHints="@string/prompt_phone"
+        android:hint="@string/server_ip"
+        android:inputType="textEmailAddress"
+        android:minHeight="48dp"
+        android:selectAllOnFocus="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/login_ic" />
+
 
     <EditText
         android:id="@+id/login_username"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="50dp"
-        android:layout_marginTop="32dp"
         android:layout_marginEnd="50dp"
         android:autofillHints="@string/prompt_phone"
         android:hint="@string/prompt_phone"
@@ -31,8 +49,9 @@
         android:minHeight="48dp"
         android:selectAllOnFocus="true"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/login_ic" />
+        app:layout_constraintTop_toBottomOf="@+id/login_server_ip" />
 
     <EditText
         android:id="@+id/login_password"

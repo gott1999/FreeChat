@@ -30,4 +30,7 @@
     <string name="search">搜索</string>
     <string name="action_register_short">注册</string>
     <string name="logged_out">登出</string>
+    <string name="server_ip">服务器地址</string>
+    <string name="server_port">服务器端口</string>
+    <string name="ip_error">服务器地址错误</string>
 </resources>

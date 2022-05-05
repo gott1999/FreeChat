@@ -12,11 +12,13 @@
         android:requestLegacyExternalStorage="false"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.UrChat">
+        android:theme="@style/Theme.UrChat"
+        android:windowSoftInputMode="adjustResize">
         <activity
             android:name=".ui.activity.LoginActivity"
             android:exported="false" />
-        <activity android:name=".ui.activity.ChatActivity" />
+        <activity android:name=".ui.activity.ChatActivity"
+            android:windowSoftInputMode="adjustResize" />
         <activity android:name=".ui.activity.MainActivity" />
         <activity
             android:name=".ui.activity.Welcome"

@@ -1,0 +1,39 @@
+﻿syntax = "proto3";
+
+package edu.xww.urchat.network.proto;
+
+message Protocol
+{
+    // 前一个报文信息 是否有效
+    bool valid = 1 ;
+
+    ConnectType type = 2;
+
+    ProtocolType ProtocolType = 3;
+
+    uint64 millisecond_timestamp = 4;
+
+    map<string, string> pairs = 10;
+
+    map<string, bytes> bits = 11;
+
+}
+
+// 连接种类
+enum ConnectType
+{
+    // 请求
+    REQUEST = 0;
+    // 响应
+    RESPONSE = 1;
+    // 中转
+    TRANSIT = 2;
+}
+
+enum ProtocolType
+{
+    // 单个
+    SINGLE = 0;
+    // 嵌套
+    NESTED = 1;
+}

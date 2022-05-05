@@ -11,8 +11,16 @@ import edu.xww.urchat.R
 import edu.xww.urchat.data.runtime.LoginRepository
 import edu.xww.urchat.data.struct.Result
 import edu.xww.urchat.tools.Encode.hash
+import edu.xww.urchat.tools.IpChecker
+import java.util.concurrent.ExecutorService
+import java.util.concurrent.Executors
+import java.util.concurrent.locks.ReentrantLock
 
 class LoginActivity : AppCompatActivity(), View.OnClickListener {
+
+    private val executorService: ExecutorService = Executors.newFixedThreadPool(1)
+
+    private val lock = ReentrantLock()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,43 +37,79 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun login() {
-        val username: EditText = findViewById(R.id.login_username)
-        val password: EditText = findViewById(R.id.login_password)
+        val unameEditText: EditText = findViewById(R.id.login_username)
+        val uname = unameEditText.text.toString()
 
-        if (username.text.length > 6 && password.text.length > 6) {
-            val res = LoginRepository.login(
-                username.text.toString(),
-                hash(password.text.toString())
-            )
+        val passwordEditText: EditText = findViewById(R.id.login_password)
+        val upassword = passwordEditText.text.toString()
+
+        val serverEditText: EditText = findViewById(R.id.login_server_ip)
+        val server = serverEditText.text.toString()
+
+        if (!IpChecker.checkIpv4(server)) {
+            Toast.makeText(this, R.string.ip_error, Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        if (uname.length < 6 && upassword.length < 6) {
+            Toast.makeText(this, R.string.uname_pwd_too_short, Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        executorService.execute{
+            if (lock.isLocked) return@execute
+            lock.lock()
+
+            val res = LoginRepository.login(server, 25565, uname, hash(upassword))
             if (res is Result.Success) {
                 startActivity(Intent(this, Welcome::class.java))
                 finish()
             } else {
-                Toast.makeText(this, res.toString(), Toast.LENGTH_SHORT).show()
+                this.runOnUiThread{
+                    Toast.makeText(this, res.toString(), Toast.LENGTH_SHORT).show()
+                }
             }
-        } else {
-            Toast.makeText(this, R.string.uname_pwd_too_short, Toast.LENGTH_SHORT).show()
+
+            lock.unlock()
         }
     }
 
     private fun register() {
-        val username: EditText = findViewById(R.id.login_username)
-        val password: EditText = findViewById(R.id.login_password)
+        val usernameEditText: EditText = findViewById(R.id.login_username)
+        val uname = usernameEditText.text.toString()
 
-        if (username.text.length > 6 && password.text.length > 6) {
-            val res = LoginRepository.register(
-                username.text.toString(),
-                hash(password.text.toString())
-            )
+        val passwordEditText: EditText = findViewById(R.id.login_password)
+        val upassword = passwordEditText.text.toString()
+
+        val serverEditText: EditText = findViewById(R.id.login_server_ip)
+        val server = serverEditText.text.toString()
+
+        if (!IpChecker.checkIpv4(server)) {
+            Toast.makeText(this, R.string.ip_error, Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        if (uname.length < 6 && upassword.length < 6) {
+            Toast.makeText(this, R.string.uname_pwd_too_short, Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        executorService.execute {
+            if (lock.isLocked) return@execute
+            lock.lock()
+
+            val res = LoginRepository.register(server, 25565, uname, hash(upassword))
             if (res is Result.Success) {
                 startActivity(Intent(this, Welcome::class.java))
                 finish()
             } else {
-                Toast.makeText(this, res.toString(), Toast.LENGTH_SHORT).show()
+                this.runOnUiThread{
+                    Toast.makeText(this, res.toString(), Toast.LENGTH_SHORT).show()
+                }
             }
-        } else {
-            Toast.makeText(this, R.string.uname_pwd_too_short, Toast.LENGTH_SHORT).show()
+            lock.unlock()
         }
     }
+
 
 }

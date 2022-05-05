@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
     tools:context=".ui.activity.MainActivity">
 
     <androidx.viewpager2.widget.ViewPager2
@@ -19,9 +20,9 @@
         android:id="@+id/main_navigation"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="10dp"
-        android:paddingBottom="10dp"
-        android:background="#DFFFFFFF"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
+        android:background="#FFFFFF"
         app:itemIconTint="@drawable/main_selector"
         app:itemTextColor="@drawable/main_selector"
         app:layout_constraintBottom_toBottomOf="parent"
