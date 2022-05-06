@@ -1,6 +1,6 @@
 ﻿# -*- coding: UTF-8 -*-
 
 
-from app.network.dispatcher import Server
+from app.network.server import Server
 
 Server.startServer()

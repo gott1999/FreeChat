@@ -9,7 +9,7 @@ message Protocol
 
     ConnectType type = 2;
 
-    ProtocolType ProtocolType = 3;
+    ProtocolType protocol_type = 3;
 
     uint64 millisecond_timestamp = 4;
 

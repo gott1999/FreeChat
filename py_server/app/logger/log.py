@@ -29,13 +29,13 @@ class Logger:
 
     @staticmethod
     def log(msg=''):
-        s = '[LOG]: time=%s %s' % (Logger.getTime(), msg)
+        s = '[LOG]: %s %s' % (Logger.getTime(), msg)
         print(s)
         Logger.write(s)
 
     @staticmethod
     def error(msg=''):
-        s = '[WARN]: time=%s %s' % (Logger.getTime(), msg)
+        s = '[WARN]: %s %s' % (Logger.getTime(), msg)
         print(s)
         Logger.write(s)
 
