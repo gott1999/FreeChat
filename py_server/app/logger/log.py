@@ -2,8 +2,7 @@
 
 import time
 import os
-
-path = 'log'
+from app.config.serve import DEFAULT_LOG_PATH as PATH
 
 
 class Logger:
@@ -11,11 +10,11 @@ class Logger:
 
     @staticmethod
     def init():
-        if not os.path.exists(path):
-            os.mkdir(path)
+        if not os.path.exists(PATH):
+            os.mkdir(PATH)
         if Logger.fileName is None:
             t = time.strftime('%Y年%m月%d日 %H时%M分%S秒', time.localtime())
-            Logger.fileName = './%s/%s.txt' % (path, t)
+            Logger.fileName = './%s/%s.txt' % (PATH, t)
 
     @staticmethod
     def write(msg):
