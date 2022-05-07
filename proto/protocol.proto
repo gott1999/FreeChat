@@ -9,9 +9,9 @@ message Protocol
 
     ConnectType type = 2;
 
-    ProtocolType protocol_type = 3;
+    uint64 millisecond_timestamp = 3;
 
-    uint64 millisecond_timestamp = 4;
+    map<string, string> config = 4;
 
     map<string, string> pairs = 10;
 
@@ -30,10 +30,3 @@ enum ConnectType
     TRANSIT = 2;
 }
 
-enum ProtocolType
-{
-    // 单个
-    SINGLE = 0;
-    // 嵌套
-    NESTED = 1;
-}

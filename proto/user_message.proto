@@ -1,0 +1,35 @@
+﻿syntax = "proto3";
+
+package edu.xww.urchat.network.proto;
+
+message UserMessage
+{
+
+    MessageType type = 1;
+
+    string src = 2;
+
+    string des = 3;
+
+    string message = 4;
+
+    uint64 millisecond_timestamp = 5;
+
+}
+
+// message type
+enum MessageType
+{
+    // pure text
+    TEXT = 0;
+    // image
+    IMAGE = 1;
+    // position
+    POSITION = 2;
+    // Binary
+    BINARY = 3;
+    // add
+    ADD = 4;
+    // del
+    DEL = 5;
+}

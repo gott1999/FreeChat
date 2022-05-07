@@ -6,9 +6,13 @@ import threading
 from app.logger import log
 from app.logic import dispatcher
 
-DEFAULT_PORT = 25565
-DEFAULT_CONNECT_POOL_SIZE = 5
-DEFAULT_BUFFER = 1024
+from app.config.serve import DEFAULT_INET
+from app.config.serve import DEFAULT_BUFFER
+from app.config.serve import DEFAULT_STREAM
+from app.config.serve import DEFAULT_PORT
+from app.config.serve import DEFAULT_CONNECT_POOL_SIZE
+from app.config.serve import DEFAULT_UPLOAD_PATH
+from app.config.serve import DEFAULT_IMAGE_UPLOAD_PATH
 
 
 class Server:
@@ -19,12 +23,10 @@ class Server:
         create folders for use
         :return:
         """
-        if not os.path.exists('upload'):
-            os.mkdir('upload')
-        if not os.path.exists('upload/icon'):
-            os.mkdir('upload/icon')
-        if not os.path.exists('upload/img'):
-            os.mkdir('upload/img')
+        if not os.path.exists(DEFAULT_UPLOAD_PATH):
+            os.mkdir(DEFAULT_UPLOAD_PATH)
+        if not os.path.exists(DEFAULT_IMAGE_UPLOAD_PATH):
+            os.mkdir(DEFAULT_IMAGE_UPLOAD_PATH)
 
     @staticmethod
     def startServer(port=DEFAULT_PORT, pool=DEFAULT_CONNECT_POOL_SIZE):
@@ -36,25 +38,7 @@ class Server:
         """
         Server.initFolders()
         log.Logger.log("Ivp4 start server on port: %s" % port)
-        skt = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        skt.settimeout(10)
-        skt.bind(('', port))
-        skt.listen(pool)
-        while True:
-            conn, address = skt.accept()
-            threading.Thread(target=Server.handle, args=(conn, address)).start()
-
-    @staticmethod
-    def startServerIpv6(port=DEFAULT_PORT, pool=DEFAULT_CONNECT_POOL_SIZE):
-        """
-        start Server
-        :param port: port
-        :param pool: connect pool size
-        :return: None
-        """
-        Server.initFolders()
-        log.Logger.log("Ivp6 start server on port: %s" % port)
-        skt = socket.socket(socket.AF_INET6, socket.SOCK_STREAM)
+        skt = socket.socket(DEFAULT_INET, DEFAULT_STREAM)
         skt.settimeout(10)
         skt.bind(('', port))
         skt.listen(pool)
@@ -70,12 +54,11 @@ class Server:
         :param address: address
         :return: None
         """
-        # noinspection PyBroadException
         try:
             total_data = Server.receive(conn, address)
             res = dispatcher.tick(total_data, address)
             conn.send(res)
-        except Exception as e:
+        except Exception:
             log.Logger.error("ip=%s:%s by='handle' handle error" % address)
         finally:
             conn.close()

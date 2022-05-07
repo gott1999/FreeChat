@@ -3,6 +3,11 @@ from proto import protocol_pb2 as protoc
 
 
 def serialize(t: protoc.Protocol):
+    """
+    only the outside protoc can use
+    :param t:
+    :return:
+    """
     return t.SerializeToString() + b'#'
 
 
