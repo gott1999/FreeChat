@@ -1,23 +1,32 @@
 package edu.xww.urchat.data.struct.user
 
+
 class Message private constructor(
     private val m_messageType: MessageType,
-    private val m_content: String
+    private val m_content: String,
+    public var time: Long = 0
 ) : java.io.Serializable {
 
     companion object {
+
         fun sendNormalText(string: String): Message =
             Message(MessageType.SEND_TEXT_NORMAL, string)
 
         fun receiveNormalText(string: String): Message =
             Message(MessageType.RECEIVE_TEXT_NORMAL, string)
 
-        fun sendNormalImg(url: String): Message =
-            Message(MessageType.SEND_IMAGE_NORMAL, url)
+        fun sendNormalImg(name: String): Message =
+            Message(MessageType.SEND_IMAGE_NORMAL, name)
 
-        fun receiveNormalImg(url: String): Message =
-            Message(MessageType.RECEIVE_IMAGE_NORMAL, url)
+        fun receiveNormalImg(name: String): Message =
+            Message(MessageType.RECEIVE_IMAGE_NORMAL, name)
 
+    }
+
+    fun isMe(): Boolean = when (m_messageType) {
+        MessageType.SEND_TEXT_NORMAL -> true
+        MessageType.SEND_IMAGE_NORMAL -> true
+        else -> false
     }
 
     enum class MessageType {
@@ -33,6 +42,8 @@ class Message private constructor(
 
     private var success = true
 
-    public fun sendFailed() { success = false }
+    public fun sendFailed() {
+        success = false
+    }
 
 }

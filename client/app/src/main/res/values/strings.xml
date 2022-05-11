@@ -14,7 +14,7 @@
     <string name="_500">Client Error</string>
     <string name="title_activity_login">LoginActivity</string>
     <string name="prompt_email">Email</string>
-    <string name="prompt_phone">Phone</string>
+    <string name="prompt_username">username</string>
     <string name="prompt_password">Password</string>
     <string name="action_sign_in">Sign in or register</string>
     <string name="action_sign_in_short">Sign in</string>
@@ -34,4 +34,10 @@
     <string name="server_ip">server</string>
     <string name="server_port">port</string>
     <string name="ip_error">Ip has error</string>
+    <string name="you">you</string>
+    <string name="picture">picture</string>
+    <string name="select">select</string>
+    <string name="camera">camera</string>
+    <string name="delete">delete</string>
+    <string name="history">history</string>
 </resources>

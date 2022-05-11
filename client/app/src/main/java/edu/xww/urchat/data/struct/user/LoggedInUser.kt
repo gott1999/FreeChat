@@ -4,5 +4,6 @@ data class LoggedInUser(
     var status: Int = 0,
     var uniqueId: String = "",
     var displayName: String = "",
+    var icon: String = "",
     var key: String = ""
 )

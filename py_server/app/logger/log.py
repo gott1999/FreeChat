@@ -34,7 +34,7 @@ class Logger:
 
     @staticmethod
     def error(msg=''):
-        s = '[WARN]: %s %s' % (Logger.getTime(), msg)
+        s = '[ERROR]: %s %s' % (Logger.getTime(), msg)
         print(s)
         Logger.write(s)
 

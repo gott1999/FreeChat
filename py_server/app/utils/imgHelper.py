@@ -3,7 +3,7 @@
 import os
 from app.logger import log
 
-path = "./upload/img/%s"
+path = "../upload/img/%s"
 
 
 def getImage(name: str):
@@ -18,6 +18,7 @@ def getImage(name: str):
             if os.path.exists(path % name):
                 with open(path % name, 'rb') as r:
                     res = r.read()
+                log.Logger.log("name=%s by='helper' loaded res.len=%s" % (name, len(res)))
         except Exception as e:
             log.Logger.error("name=%s by='helper' error get image" % name)
             raise e
@@ -30,9 +31,10 @@ def saveImage(name: str, img: bytes):
     :param name: img name
     :param img: bytes
     """
-    try:
-        with open(path % name, 'wb') as w:
-            w.write(img)
-    except Exception as e:
-        log.Logger.error("name=%s by='helper' error save image" % name)
-        raise e
+    if not os.path.exists(path % name):
+        try:
+            with open(path % name, 'wb') as w:
+                w.write(img)
+        except Exception as e:
+            log.Logger.error("name=%s by='helper' error save image" % name)
+            raise e

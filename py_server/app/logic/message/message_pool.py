@@ -1,5 +1,5 @@
 # -*- coding: UTF-8 -*-
-
+from app.logger import log
 from proto import user_message_pb2 as msg
 
 
@@ -40,7 +40,6 @@ class MessagePool:
         else:
             self.messagePool[des] = [m]
 
-
     def pop(self, des: str):
         if des in self.messagePool:
             return self.messagePool.pop(des)
@@ -67,8 +66,6 @@ class MessageManager:
 
     manager = MessagePool()
 
-    ipPool = {str: str}
-
     @staticmethod
     def serialize(m: msg.UserMessage):
         return m.SerializeToString()
@@ -79,5 +76,5 @@ class MessageManager:
         try:
             t.ParseFromString(b)
         except Exception as e:
-            print(str(e))
+            log.Logger.error(e)
         return t

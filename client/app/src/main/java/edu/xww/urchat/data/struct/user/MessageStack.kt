@@ -1,71 +1,47 @@
 package edu.xww.urchat.data.struct.user
 
-class MessageStack {
+import android.util.Log
+import java.util.concurrent.locks.ReentrantLock
 
-    /**
-     * 栈元素的结构
-     */
-    private class MessageStackNode {
-        var id: String?
-        var box: MessageBox?
-        var prev: MessageStackNode?
-        var next: MessageStackNode?
+class MessageStack {
+    private val lock = ReentrantLock()
+
+    class MessageInfo(var uid: String, var msg: String = "", var time: Long = 0)
+
+    private class LinkedNode {
+        var index = 0
+        var info: MessageInfo?
+        var prev: LinkedNode?
+        var next: LinkedNode?
 
         constructor() {
-            id = null
-            box = null
+            info = null
             prev = null
             next = null
         }
 
-        constructor(_box: MessageBox) {
-            id = _box.messageId
-            box = _box
+        constructor(_info: MessageInfo) {
+            info = _info
             prev = null
             next = null
         }
 
-        public fun update(newBox: MessageBox) {
-            box = newBox
-        }
-
-        public fun clear() {
-            id = null
-            box = null
+        fun clear() {
+            info = null
             prev = null
             next = null
         }
     }
 
-    /**
-     * 到栈底的编号 to id
-     */
-    private var indexToId = HashMap<Int, String>()
+    private var indexToNode = HashMap<Int, LinkedNode>()
 
-    /**
-     * id to 到栈底的编号
-     */
-    private var idToIndex = HashMap<String, Int>()
+    private var uidToNode = HashMap<String, LinkedNode>()
 
-    /**
-     * 消息id 到 消息节点
-     */
-    private var idToNode = HashMap<String, MessageStackNode>()
-
-    /**
-     * size
-     */
     private var size: Int = 0
 
-    /**
-     * 哨兵  头为栈底 尾为栈顶
-     */
-    private var head = MessageStackNode()
-    private var tail = MessageStackNode()
+    private var head = LinkedNode()
+    private var tail = LinkedNode()
 
-    /**
-     * 初始化头尾哨兵
-     */
     init {
         head.next = tail
         head.prev = tail
@@ -73,113 +49,77 @@ class MessageStack {
         tail.next = head
     }
 
-    /**
-     * get Size
-     */
-    public fun size(): Int {
+    fun size(): Int {
         return size
     }
 
-    /**
-     * 根据是栈中第几个(0 开始) 获取这个相对于栈底的距离 size - no - 1
-     * 再根据到栈底的距离 获取id
-     * 根据id 拿节点
-     */
-    public fun get(no: Int): MessageBox? {
-        val id = indexToId[size - no - 1]
-        val node = idToNode[id]
-        if (null != node) {
-            return node.box
-        }
-        return null
+    operator fun get(no: Int): MessageInfo? {
+        return indexToNode[size - no - 1]?.info
     }
 
-    public fun getById(id: String): MessageBox? {
-        return idToNode[id]?.box
+    operator fun get(uid: String): MessageInfo? {
+        return uidToNode[uid]?.info
     }
 
-    /**
-     * 添加节点
-     */
-    public fun push(box: MessageBox) {
-        val node = MessageStackNode(box)
-        val id = box.messageId
-        indexToId[size] = id
-        idToIndex[id] = size
-        idToNode[id] = node
-        push(node)
-        ++size
-    }
+    fun push(uid: String, msg: String, time: Long) {
+        if (uidToNode[uid] == null) {
+            lock.lock()
+            Log.d("MessageStack", "Push $uid")
+            val node = LinkedNode(MessageInfo(uid, msg, time))
+            node.index = size
 
-    /**
-     * 批量添加
-     */
-    public fun pushAll(boxes: Array<MessageBox>) {
-        for (box in boxes) push(box)
-    }
+            uidToNode[uid] = node
+            indexToNode[size] = node
 
-    /**
-     * 压入栈
-     */
-    private fun push(node: MessageStackNode) {
-        node.next = tail
-        node.prev = tail.prev
-        tail.prev?.next = node
-        tail.prev = node
-    }
+            node.next = tail
+            node.prev = tail.prev
+            tail.prev?.next = node
+            tail.prev = node
 
-    /**
-     * 删除数据结构中一个节点
-     */
-    public fun remove(messageId: String) {
-        val node = idToNode[messageId] ?: return
-        size--
-        val next = node.next
-        node.prev?.next = next
-        node.next?.prev = node.prev
-    }
-
-    /**
-     * 更新数据结构中的内容
-     */
-    public fun update(messageBox: MessageBox): Boolean {
-        val node = idToNode[messageBox.messageId]
-        if (null != node) {
-            node.update(messageBox)
-            moveToTail(node)
+            ++size
+            lock.unlock()
         } else {
-            push(messageBox)
+            if (uidToNode[uid]?.info?.time!! > time) return
+            Log.d("MessageStack", "Update $uid ")
+            remove(uid)
+            push(uid, msg, time)
         }
 
-        return true
     }
 
-    /**
-     * 移动到栈顶
-     * TODO 更新集合的映射顺序关系
-     */
-    private fun moveToTail(node: MessageStackNode): Boolean {
-        val next = node.next
-        node.prev?.next = next
+    fun remove(uid: String) {
+        lock.lock()
+        val node = uidToNode[uid]?: return
+
+        uidToNode.remove(uid)
+        indexToNode.remove(node.index)
+
+        var curr = node.next
+
+        node.prev?.next = node.next
         node.next?.prev = node.prev
+        node.clear()
 
+        while(curr != tail && curr != null) {
+            val index = uidToNode[uid]!!.index
 
-        node.next = tail
-        node.prev = tail.prev
-        tail.prev?.next = node
-        tail.prev = node
+            indexToNode.remove(index)
+            indexToNode[index - 1] = curr
+            curr.index = index - 1
 
-        return true
+            curr = curr.next
+        }
+
+        --size
+        lock.unlock()
     }
 
+    fun clear() {
+        indexToNode.clear()
+        uidToNode.clear()
 
-    public fun clear() {
-        indexToId.clear()
-        idToIndex.clear()
-        idToNode.clear()
-
-        var curr: MessageStackNode? = head.next
-        var next: MessageStackNode?
+        var curr: LinkedNode? = head.next
+        var next: LinkedNode?
         while (null != curr) {
             next = curr.next
             curr.clear()

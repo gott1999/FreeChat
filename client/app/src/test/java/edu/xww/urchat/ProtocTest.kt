@@ -1,28 +1,21 @@
 package edu.xww.urchat
 
-import edu.xww.urchat.network.proto.ProtocolOuterClass
 import org.junit.Test
-import java.lang.Exception
+import java.io.FileInputStream
+import java.io.FileOutputStream
+import java.util.*
 
 class ProtocTest {
 
     @Test
     fun pTest() {
-        val builder = ProtocolOuterClass.Protocol.newBuilder()
-        builder.valid = true
-        builder.method = ProtocolOuterClass.ConnectMethod.LOGIN
-        builder.putPairs("uname", "像威威")
-        builder.putPairs("upassword", "1111ass")
-        val data = builder.build()
-        val str = data.toByteString()
-        println(str)
+        val fin = FileInputStream("D:\\workspace\\UrChat\\py_server\\upload\\img\\1.jpeg")
+        val out = FileOutputStream("D:\\workspace\\UrChat\\py_server\\upload\\img\\43d33bd179f2472f81fafc2684ed5083!400x400.jpeg")
+        val byte = fin.readBytes()
 
-        try {
-            val n = ProtocolOuterClass.Protocol.parseFrom(str)
-            println(n)
-        } catch (e: Exception) {
-            println(e.message)
-        }
 
+        val a = Base64.getEncoder().encode(byte)
+
+        out.write(a)
     }
 }

@@ -1,20 +1,26 @@
 # -*- coding: UTF-8 -*-
+from app.logger import log
 from proto import protocol_pb2 as protoc
 
 
 def serialize(t: protoc.Protocol):
     """
-    only the outside protoc can use
+    serialize
     :param t:
     :return:
     """
-    return t.SerializeToString() + b'#'
+    return t.SerializeToString()
 
 
 def deserialize(t: bytes):
-    t = protoc.Protocol()
-    if t[-1:] == b'#':
-        t.ParseFromString(t[:-1])
-    else:
-        t.ParseFromString(t)
-    return t
+    """
+    deserialize
+    :param t:
+    :return:
+    """
+    res = protoc.Protocol()
+    try:
+        res.ParseFromString(t)
+    except Exception as e:
+        log.Logger.error("by='serializer' deserialize error %s" % e.__str__())
+    return res

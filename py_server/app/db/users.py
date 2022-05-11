@@ -69,8 +69,6 @@ def login(username: str, password: str):
         with conn.cursor(cursor=cursors.DictCursor) as cursor:
             cursor.execute(sql_login, (username, password))
             res = cursor.fetchone()
-            cursor.close()
-        conn.close()
     return res
 
 
@@ -104,8 +102,7 @@ def register(username: str, password: str):
                         conn.commit()
                         if result_insert == 1:
                             res = True
-            cursor.close()
-        conn.close()
+
     return res
 
 
@@ -119,8 +116,6 @@ def getContacts(uid: str):
         with conn.cursor(cursor=cursors.DictCursor) as cursor:
             cursor.execute(sql_getContacts, uid)
             res = cursor.fetchall()
-            cursor.close()
-        conn.close()
     return res
 
 
@@ -135,8 +130,6 @@ def getContact(src_uid: str, tar_uid: str):
         with conn.cursor(cursor=cursors.DictCursor) as cursor:
             cursor.execute(sql_getContact, (src_uid, tar_uid))
             res = cursor.fetchone()
-            cursor.close()
-        conn.close()
     return res
 
 
@@ -150,8 +143,6 @@ def getUserBase(uid: str):
         with conn.cursor(cursor=cursors.DictCursor) as cursor:
             cursor.execute(sql_get_user, uid)
             res = cursor.fetchone()
-            cursor.close()
-        conn.close()
     return res
 
 
@@ -165,8 +156,6 @@ def getIcon(uid: str):
         with conn.cursor(cursor=cursors.DictCursor) as cursor:
             cursor.execute(sql_getIcon, uid)
             res = cursor.fetchone()
-            cursor.close()
-        conn.close()
     return res["icon"]
 
 
@@ -188,6 +177,4 @@ def updateUserData(table_name: str, datas, uid: str):
         with conn.cursor(cursor=cursors.DictCursor) as cursor:
             res = cursor.execute(sql_update_user_data, (table_name, string, uid))
             conn.commit()
-            cursor.close()
-        conn.close()
     return res

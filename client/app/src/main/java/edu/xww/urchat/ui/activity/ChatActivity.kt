@@ -1,29 +1,87 @@
 package edu.xww.urchat.ui.activity
 
+import android.Manifest
 import android.content.Context
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
+import android.content.pm.PackageManager
 import android.os.Bundle
+import android.provider.MediaStore
+import android.util.Log
 import android.view.View
 import android.widget.*
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.core.widget.doAfterTextChanged
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import edu.xww.urchat.R
-import edu.xww.urchat.adapter.recyclerview.ChatMessageAdapter
+import edu.xww.urchat.data.loader.ResourcesLoader
+import edu.xww.urchat.data.runtime.RunTimeData
+import edu.xww.urchat.data.runtime.RunTimeData.runTimeMessageList
+import edu.xww.urchat.data.struct.Result
 import edu.xww.urchat.data.struct.user.Message
+import edu.xww.urchat.data.struct.user.Message.Companion.sendNormalImg
 import edu.xww.urchat.data.struct.user.Message.Companion.sendNormalText
-import java.lang.Exception
+import edu.xww.urchat.network.builder.MessageBuilder
+import edu.xww.urchat.network.source.DataSource
+import edu.xww.urchat.ui.adapter.recyclerview.ChatMessageAdapter
+
 
 class ChatActivity : AppCompatActivity(), View.OnClickListener {
 
-    private var messageId = ""
+    private var tarUid = ""
 
     private var displayTitle = ""
 
-    private val messageList = ArrayList<Message>()
+    private var messageList: ArrayList<Message>? = null
 
     private lateinit var recyclerView: RecyclerView
+
+    private val select = registerForActivityResult(ActivityResultContracts.GetContent()) {
+        if (it != null) {
+            Log.d("ChatActivity/select", "get picture ${it.path}")
+
+            val filename = "${it.hashCode()}.png"
+
+            val photoBmp = MediaStore.Images.Media.getBitmap(contentResolver, it)
+            ResourcesLoader.saveImage(this, filename, photoBmp)
+            val message = sendNormalImg(filename)
+            messageList!!.add(message)
+            recyclerView.adapter?.notifyItemChanged(messageList!!.size - 1)
+
+            try {
+                Thread {
+                    val m = MessageBuilder()
+                        .setDesUid(tarUid)
+                        .setMessage(filename)
+                        .setType(MessageBuilder.Type.IMAGE)
+                        .build()
+
+                    val res = DataSource.sendImg(m, photoBmp)
+
+                    if (res is Result.Success) {
+                        // success
+                        Log.d("ChatActivity", "Say to '$tarUid': '$filename'")
+                        RunTimeData.runTimeMessage.push(
+                            tarUid,
+                            "${this.getString(R.string.you)}: ${this.getString(R.string.picture)}",
+                            System.currentTimeMillis()
+                        )
+                    } else {
+                        this.runOnUiThread {
+                            Toast.makeText(this, R.string.send_failed, Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                }.start()
+            } catch (e: java.lang.Exception) {
+                e.printStackTrace()
+            }
+        }
+
+
+    }
 
     /**
      * While
@@ -32,15 +90,16 @@ class ChatActivity : AppCompatActivity(), View.OnClickListener {
      */
     private var functionKeyType = 0
 
+    private lateinit var popupMenu:PopupMenu
+
     companion object {
         /**
          * Use startInstance to start this instance
          */
-        fun startInstance(context: Context, messageId: String, displayName: String) {
+        fun startInstance(context: Context, messageId: String) {
             val appContext = context.applicationContext
             val intent = Intent(appContext, ChatActivity::class.java)
-            intent.putExtra("messageId", messageId)
-            intent.putExtra("displayName", displayName)
+            intent.putExtra("tarUid", messageId)
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
             appContext.startActivity(intent)
         }
@@ -54,12 +113,15 @@ class ChatActivity : AppCompatActivity(), View.OnClickListener {
         bindAdapter()
     }
 
-
     private fun initData() {
         try {
-            messageId = intent.getSerializableExtra("messageId") as String
-            displayTitle = intent.getSerializableExtra("displayName") as String
-            // TODO get data
+            tarUid = intent.getSerializableExtra("tarUid") as String
+            displayTitle = RunTimeData.runTimeContacts[tarUid]!!.displayName
+
+            if (!runTimeMessageList.containsKey(tarUid))
+                runTimeMessageList[tarUid] = ArrayList()
+            messageList = runTimeMessageList[tarUid]
+
         } catch (e: Exception) {
             e.printStackTrace()
             Toast.makeText(this, R.string._404, Toast.LENGTH_LONG).show()
@@ -73,6 +135,15 @@ class ChatActivity : AppCompatActivity(), View.OnClickListener {
 
         // menu icon
         val menu: ImageView = findViewById(R.id.activity_chat_head_menu)
+        val popupMenu = PopupMenu(this, menu)
+        popupMenu.menuInflater.inflate(R.menu.menu_chat, popupMenu.menu);
+        popupMenu.setOnMenuItemClickListener{
+
+            return@setOnMenuItemClickListener false
+        }
+        popupMenu.setOnDismissListener {
+
+        }
         menu.setOnClickListener(this)
 
         // title
@@ -110,7 +181,8 @@ class ChatActivity : AppCompatActivity(), View.OnClickListener {
     private fun bindAdapter() {
         recyclerView = findViewById(R.id.activity_chat_message_recycler_view)
         recyclerView.layoutManager = LinearLayoutManager(this)
-        recyclerView.adapter = ChatMessageAdapter(messageList)
+        recyclerView.adapter = ChatMessageAdapter(this, tarUid)
+
     }
 
     override fun onClick(view: View?) {
@@ -129,7 +201,7 @@ class ChatActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun onMenuClicked() {
-        Toast.makeText(this, R.string.NotFinished, Toast.LENGTH_SHORT).show()
+        popupMenu.show();
     }
 
     private fun onTitleClicked() {
@@ -141,7 +213,22 @@ class ChatActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun onEmojiClicked() {
-        Toast.makeText(this, R.string.NotFinished, Toast.LENGTH_SHORT).show()
+
+        val p = arrayOf(
+            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+            Manifest.permission.READ_EXTERNAL_STORAGE
+        )
+
+        val checkWrite = ContextCompat.checkSelfPermission(this, p[0])
+        val checkRead = ContextCompat.checkSelfPermission(this, p[1])
+        val ok = PackageManager.PERMISSION_GRANTED
+
+        if (checkWrite != ok && checkRead != ok) {
+            ActivityCompat.requestPermissions(this, p, 1)
+        } else {
+            select.launch("image/*")
+        }
+
     }
 
     private fun onFunctionKeyClicked() {
@@ -152,7 +239,7 @@ class ChatActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun showFunctions() {
-        // TODO show functions
+
         Toast.makeText(this, R.string.NotFinished, Toast.LENGTH_SHORT).show()
     }
 
@@ -161,18 +248,43 @@ class ChatActivity : AppCompatActivity(), View.OnClickListener {
         val text = editText.text.toString()
         if (text.isNotEmpty()) {
             val message = sendNormalText(text)
-            messageList.add(message)
-            recyclerView.adapter?.notifyItemChanged(messageList.size - 1)
-            // TODO Send message
+            messageList!!.add(message)
+            recyclerView.adapter?.notifyItemChanged(messageList!!.size - 1)
+            editText.setText("")
             try {
+                Thread {
 
-                // success
-                editText.setText("")
+                    val m = MessageBuilder()
+                        .setDesUid(tarUid)
+                        .setMessage(text)
+                        .setType(MessageBuilder.Type.TEXT)
+                        .build()
+                    val res = DataSource.sendMessage(m)
+
+                    if (res is Result.Success) {
+                        // success
+                        Log.d("ChatActivity", "Say to '$tarUid': '$text'")
+                        RunTimeData.runTimeMessage.push(
+                            tarUid,
+                            "${this.getString(R.string.you)}:$text",
+                            System.currentTimeMillis()
+                        )
+                    } else {
+                        this.runOnUiThread {
+                            Toast.makeText(this, R.string.send_failed, Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                }.start()
+
+
             } catch (e: Exception) {
+                Log.d("Send Message", e.toString())
                 Toast.makeText(this, R.string.send_failed, Toast.LENGTH_SHORT).show()
             }
         }
         // scroll to bottom
-        recyclerView.scrollToPosition(messageList.size - 1)
+        recyclerView.scrollToPosition(messageList!!.size - 1)
     }
+
+
 }
