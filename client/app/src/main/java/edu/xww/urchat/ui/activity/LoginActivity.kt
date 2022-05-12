@@ -27,11 +27,11 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
 
     var count = 0
 
-    private lateinit var unameEditText:EditText
+    private lateinit var unameEditText: EditText
 
-    private lateinit var passwordEditText:EditText
+    private lateinit var passwordEditText: EditText
 
-    private lateinit var serverEditText:EditText
+    private lateinit var serverEditText: EditText
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,12 +59,7 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
                 if (res is Result.Success) {
                     startActivity(Intent(this, Welcome::class.java))
                     finish()
-                } else {
-                    this.runOnUiThread {
-                        Toast.makeText(this, res.toString(), Toast.LENGTH_SHORT).show()
-                    }
                 }
-
             }
             lock.unlock()
         }
@@ -102,7 +97,6 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
         }
 
         lock.lock()
-
         executorService.execute {
             val p = hash(upassword)
             val res = LoginStatus.login(server, 25565, uname, p)
@@ -118,6 +112,7 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
             data.putString("server", server)
             data.putString("uname", uname)
             data.putString("upassword", p)
+            data.apply()
         }
         lock.unlock()
     }
@@ -147,7 +142,6 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
         }
 
         lock.lock()
-
         executorService.execute {
             val p = hash(upassword)
             val res = LoginStatus.register(server, 25565, uname, p)
@@ -163,6 +157,7 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
             data.putString("server", server)
             data.putString("uname", uname)
             data.putString("upassword", p)
+            data.apply()
         }
         lock.unlock()
     }

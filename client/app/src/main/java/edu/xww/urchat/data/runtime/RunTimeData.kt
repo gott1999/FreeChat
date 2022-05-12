@@ -1,5 +1,7 @@
 package edu.xww.urchat.data.runtime
 
+import edu.xww.urchat.data.struct.system.CommonRecyclerViewItem
+import edu.xww.urchat.data.struct.user.Contact
 import edu.xww.urchat.data.struct.user.ContactList
 import edu.xww.urchat.data.struct.user.Message
 import edu.xww.urchat.data.struct.user.MessageStack
@@ -14,7 +16,11 @@ object RunTimeData {
     var runTimeContacts = ContactList()
         private set
 
+    var newContacts = arrayListOf<CommonRecyclerViewItem>()
+        private set
+
     var runTimeMessageList = HashMap<String, ArrayList<Message>>()
+        private set
 
     /**
      * server ip pool

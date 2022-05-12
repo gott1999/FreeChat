@@ -2,15 +2,22 @@ package edu.xww.urchat.data.loader
 
 import android.content.Context
 import android.graphics.Bitmap
+import android.graphics.Matrix
 import android.util.Log
 import android.widget.ImageView
+import edu.xww.urchat.ui.activity.ChatActivity
+import edu.xww.urchat.ui.adapter.recyclerview.ChatMessageAdapter
 import java.lang.Exception
+import kotlin.math.min
 
 object ResourcesLoader {
 
     val loader = DiskLoader()
 
     fun setImageBitmap(context: Context, imgView: ImageView, src: String) {
+        if (src == "") {
+            return
+        }
         Log.d("ResourcesLoader", "Set Image Bitmap: $src")
         Thread {
             try {
@@ -43,8 +50,24 @@ object ResourcesLoader {
                     bitmap = loader.queryImage(context, src)
                 }
                 if (bitmap != null) {
+                    val width = bitmap.width
+                    val mw = ChatMessageAdapter.maxWidth
+                    val zoom = mw.toFloat() / width
+
+                    val matrix = Matrix()
+                    matrix.postScale(zoom, zoom)
+                    val nb = Bitmap.createBitmap(
+                        bitmap,
+                        0,
+                        0,
+                        bitmap.width,
+                        bitmap.height,
+                        matrix,
+                        false
+                    )
+
                     imgView.post {
-                        imgView.setImageBitmap(bitmap)
+                        imgView.setImageBitmap(nb)
                     }
                 } else {
                     Log.d("ResourcesLoader", "Set image error: $src")

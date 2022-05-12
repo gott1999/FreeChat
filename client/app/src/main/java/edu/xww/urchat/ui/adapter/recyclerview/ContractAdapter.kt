@@ -59,14 +59,8 @@ class ContractAdapter(private val m_Context: Context) :
             ChatActivity.startInstance(m_Context, curr.uId)
         }
 
-        // set long click
-        holder.layout.setOnLongClickListener { onLongClicked() }
     }
 
     override fun getItemCount(): Int = contracts.size
-
-    private fun onLongClicked(): Boolean {
-        return true
-    }
 
 }

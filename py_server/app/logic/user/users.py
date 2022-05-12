@@ -9,7 +9,6 @@ from app.utils import randomUtils
 from proto import protocol_pb2 as protoc
 from app.logic.message.message_pool import MessageManager
 
-
 ipPool = {}
 
 
@@ -150,49 +149,32 @@ def getContact(src_uid: str, des_uid: str, address: tuple):
     return res
 
 
-def updateIcon(uid: str, icon: str, bits: bytes, address: tuple):
+def updateUserBase(uid: str, pairs: dict, bits: dict, address: tuple):
     """
     update icon
     :param address:
     :param bits: img bytes
     :param uid: uid
-    :param icon: icon
+    :param pairs: pairs
     :return:
     """
     res = get_standard_invalid_response()
-    if uid and icon and bits:
-        try:
-            users.updateUserData("user_b_data", {"icon", icon}, uid)
-            imgHelper.saveImage(icon, bits)
-            res.valid = True
-
-            # set uid to ip mapping
-            tryUpdateIp(uid, address[0])
-        except Exception as e:
-            log.Logger.error(
-                "ip=%s:%s img=%s uid=%s by='logic' update icon error. %s" % (address[0], address[1], icon, uid, str(e)))
-    return res
-
-
-def updateDisplayName(uid: str, display_name: str, address: tuple):
-    """
-    update display name
-    :param address:
-    :param uid:
-    :param display_name:
-    :return:
-    """
-    res = get_standard_invalid_response()
-    if uid and display_name:
-        try:
-            users.updateUserData("user_b_data", {"display_name", display_name}, uid)
-            res.valid = True
-
-            # set uid to ip mapping
-            tryUpdateIp(uid, address[0])
-        except Exception as e:
-            log.Logger.error("ip=%s:%s uid=%s display_name=%s by='db' error update displayName. %s" % (
-                address[0], address[1], uid, display_name, str(e)))
+    if uid:
+        if pairs:
+            try:
+                if "icon" in pairs:
+                    users.updateIcon(pairs["icon"], uid)
+                if "displayName" in pairs:
+                    users.updateDisplayName(pairs["displayName"], uid)
+                if "upassword" in pairs:
+                    users.updateUserUpassword(pairs["upassword"], uid)
+                res.valid = True
+            except Exception as e:
+                log.Logger.error(
+                    "ip=%s:%s uid=%s by='logic' update user data error. %s" % (address[0], address[1], uid, str(e)))
+        if bits:
+            for key, value in bits.items():
+                imgHelper.saveImage(key, value)
     return res
 
 
@@ -244,7 +226,16 @@ def addMessage(bits: bytes):
     """
     m = MessageManager.deserialize(bits)
     if m.des and m.des != "":
-        MessageManager.manager.push(m.des, m)
+        from proto import user_message_pb2 as msg
+        log.Logger.log("%s" % m.message)
+        if m.type == msg.MessageType.DEL:
+            users.delRelationShip(m.sec, m.des)
+        else:
+            if m.type == msg.MessageType.ADD:
+                rt = users.getUid(m.des)
+                if len(rt) > 0:
+                    m.des = str(rt["uid"])
+            MessageManager.manager.push(m.des, m)
 
 
 def tryGetIP(uid: str):
@@ -290,3 +281,9 @@ def get_standard_valid_response():
 
 def get_millisecond_timestamp():
     return round(time.time() * 1000)
+
+
+def addRelationship(src, des):
+    if src and des:
+        users.addRelationShip(src, des)
+    return get_standard_valid_response()

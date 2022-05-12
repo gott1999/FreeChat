@@ -48,13 +48,12 @@ object LoginSource {
             if (mp == null ||
                 !mp.containsKey("uid") ||
                 !mp.containsKey("displayName") ||
-                !mp.containsKey("icon") ||
                 !mp.containsKey("key")
             ) {
                 throw Exception("Data lost!")
             }
 
-            Result.Success(LoggedInUser(0, mp["uid"]!!, mp["displayName"]!!, mp["icon"]!!, mp["key"]!!))
+            Result.Success(LoggedInUser(0, mp["uid"]!!, mp["displayName"]!!, mp["icon"]?:"", mp["key"]!!))
         } catch (e: Exception) {
             Result.Error(e.toString())
         }

@@ -16,6 +16,11 @@ import java.lang.IllegalArgumentException
 class ChatMessageAdapter(private val m_Context: Context, private val tarUid: String) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
+    companion object {
+        var maxWidth = 80
+        var maxHeight = 80
+    }
+
     private val messageList = RunTimeData.runTimeMessageList[tarUid]!!
 
     open inner class BaseViewHolder(view: View, viewType: Int) : RecyclerView.ViewHolder(view) {
@@ -43,6 +48,8 @@ class ChatMessageAdapter(private val m_Context: Context, private val tarUid: Str
         val maxMessageWidth = (parent.context.resources.displayMetrics.widthPixels * 0.6).toInt()
         val maxMessageHeight =
             (parent.context.resources.displayMetrics.heightPixels * 0.6).toInt()
+        maxWidth = maxMessageWidth
+        maxHeight = maxMessageHeight
 
         // get ViewHolder
         return getViewHolder(getView(parent, viewType), viewType, maxMessageWidth, maxMessageHeight)

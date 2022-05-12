@@ -4,4 +4,13 @@
         <item name="android:windowTranslucentStatus">true</item>
         <item name="android:windowLightStatusBar">true</item>
     </style>
+
+    <style name="Theme.UrChat.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="Theme.UrChat.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="Theme.UrChat.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 </resources>

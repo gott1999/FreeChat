@@ -1,5 +1,4 @@
 # -*- coding: UTF-8 -*-
-import base64
 import threading
 
 from proto import protocol_pb2 as protoc
@@ -10,6 +9,15 @@ from app.config.serve import DEFAULT_INET
 from app.config.serve import DEFAULT_STREAM
 from app.config.serve import DEFAULT_CONNECT_POOL_SIZE
 from app.utils.imgHelper import saveImage
+
+
+def addRelationship(np, address):
+    if np.config["UID"] and np.pairs["des_uid"]:
+        users.addRelationship(np.config["UID"], np.pairs["des_uid"])
+
+
+def update(np, address):
+    return users.updateUserBase(np.config["UID"], np.pairs, np.bits, address)
 
 
 def tick(data: bytes, address: tuple):
@@ -43,9 +51,14 @@ def tick(data: bytes, address: tuple):
                 res = requestContact(np, address)
             elif np.config["REQUIRE"] == "IMAGE":
                 res = getImg(np, address)
+            elif np.config["REQUIRE"] == "UPDATE":
+                res = update(np, address)
     elif np.type == protoc.ConnectType.TRANSIT:
         res = mentionMessage(np, address)
     else:
+        if np.config["RESPONSE"] == "CONTACT":
+            addRelationship(np, address)
+            print(np)
         res = users.get_standard_valid_response()
 
     return serializer.serialize(res)
@@ -162,6 +175,7 @@ def mentionMessage(np: protoc.Protocol, address: tuple):
         threading.Thread(target=saveBits, args=(np,)).start()
     if des_uid:
         mention(des_uid)
+
     return users.get_standard_valid_response()
 
 

@@ -75,6 +75,12 @@ class ProtocBuilder {
         return this
     }
 
+    fun requireUpdate(): ProtocBuilder {
+        builder.type = ProtocolOuterClass.ConnectType.REQUEST
+        builder.putConfig("REQUIRE", "UPDATE")
+        return this
+    }
+
     fun requireLogout(): ProtocBuilder {
         builder.type = ProtocolOuterClass.ConnectType.REQUEST
         builder.putConfig("REQUIRE", "LOGOUT")
@@ -115,8 +121,15 @@ class ProtocBuilder {
         return this
     }
 
-    fun responsePositive() {
+    fun responseContact(): ProtocBuilder {
         builder.type = ProtocolOuterClass.ConnectType.RESPONSE
+        builder.putConfig("RESPONSE", "CONTACT")
+        return this
+    }
+
+    fun responsePositive(): ProtocBuilder {
+        builder.type = ProtocolOuterClass.ConnectType.RESPONSE
+        return this
     }
 
 }

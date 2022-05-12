@@ -52,14 +52,14 @@ abstract class CommonRecyclerViewAdaptor(
         // set display name
         holder.displayName.text = curr.displayName
 
-        holder.layout.setOnClickListener { onClick(curr) }
-        holder.layout.setOnLongClickListener { onLongClick(curr) }
+        holder.layout.setOnClickListener { onClick(curr, position, holder.layout) }
+        holder.layout.setOnLongClickListener { onLongClick(curr, position, holder.layout) }
     }
 
     override fun getItemCount(): Int = list.size
 
 
-    abstract fun onClick(item: CommonRecyclerViewItem)
+    abstract fun onClick(item: CommonRecyclerViewItem, position: Int, view: View)
 
-    abstract fun onLongClick(item: CommonRecyclerViewItem): Boolean
+    abstract fun onLongClick(item: CommonRecyclerViewItem, position: Int, layout: View): Boolean
 }

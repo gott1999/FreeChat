@@ -25,11 +25,6 @@ class ContactFragment(private val m_Context: Context) : BaseFragment(R.layout.fr
         setRefreshListener()
     }
 
-    override fun onResume() {
-        super.onResume()
-        wake()
-    }
-
     @SuppressLint("NotifyDataSetChanged")
     override fun wake() {
         recyclerView.adapter?.notifyDataSetChanged()

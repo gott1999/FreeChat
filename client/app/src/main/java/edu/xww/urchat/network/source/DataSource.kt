@@ -2,13 +2,13 @@ package edu.xww.urchat.network.source
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.os.Debug
 import android.util.Log
-import androidx.core.graphics.drawable.toDrawable
 import com.google.protobuf.ByteString
-import edu.xww.urchat.data.loader.LoaderManager
 import edu.xww.urchat.data.runtime.RunTimeData
 import edu.xww.urchat.data.runtime.RunTimeData.runTimeMessageList
 import edu.xww.urchat.data.struct.Result
+import edu.xww.urchat.data.struct.system.CommonRecyclerViewItem
 import edu.xww.urchat.data.struct.user.Contact
 import edu.xww.urchat.data.struct.user.Message
 import edu.xww.urchat.network.builder.ProtocBuilder
@@ -16,11 +16,7 @@ import edu.xww.urchat.network.proto.ProtocolOuterClass
 import edu.xww.urchat.network.proto.UserMessageOuterClass
 import edu.xww.urchat.network.proto.UserMessageOuterClass.MessageType.*
 import java.io.ByteArrayOutputStream
-import java.io.FileInputStream
-import java.io.OutputStream
 import java.lang.Exception
-import java.nio.Buffer
-import java.nio.ByteBuffer
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
@@ -37,20 +33,23 @@ object DataSource {
                     val runtimeContact = RunTimeData.runTimeContacts[uid]
                     val contact = ProtocolOuterClass.Protocol.parseFrom(it.value)
                     if (runtimeContact != null) {
-                        val nickname = contact.getPairsOrDefault("nickname", "Anon")
+                        val nickname = contact.getPairsOrDefault("nickname", "")
                         val icon = contact.getPairsOrDefault("icon", "")
                         val displayName = contact.getPairsOrDefault("displayName", "")
-                        runtimeContact.name = nickname!!
+                        runtimeContact.name = displayName!!
                         runtimeContact.icon = icon!!
-                        runtimeContact.displayName = displayName!!
+                        runtimeContact.displayName = nickname!!
                     } else {
                         RunTimeData.runTimeContacts.add(
                             Contact.buildNormal(
                                 uid,
-                                contact.getPairsOrDefault("nickname", "Anon"),
-                                contact.getPairsOrDefault("icon", ""),
                                 contact.getPairsOrDefault("displayName", ""),
-                                "Users"
+                                contact.getPairsOrDefault("icon", ""),
+                                contact.getPairsOrDefault(
+                                    "nickname",
+                                    contact.getPairsOrDefault("displayName", "Contact")
+                                ),
+                                "#"
                             )
                         )
                     }
@@ -69,6 +68,7 @@ object DataSource {
             rt.data.bitsMap.forEach { entry ->
                 try {
                     val msg = UserMessageOuterClass.UserMessage.parseFrom(entry.value)
+                    Log.d("DataSource/message", msg.message)
                     if (!runTimeMessageList.containsKey(msg.src)) {
                         runTimeMessageList[msg.src] = ArrayList()
                     }
@@ -77,14 +77,29 @@ object DataSource {
                         TEXT -> m = Message.receiveNormalText(msg.message)
                         IMAGE -> m = Message.receiveNormalImg(msg.message)
                         POSITION -> m = Message.receiveNormalText(msg.message)
-                        ADD -> {}
+                        ADD -> {
+                            RunTimeData.newContacts.add(
+                                CommonRecyclerViewItem(
+                                    "",
+                                    msg.message,
+                                    "new",
+                                    msg.src
+                                )
+                            )
+                        }
                         DEL -> {}
                         else -> {}
                     }
-                    m?.time = msg.millisecondTimestamp
-                    RunTimeData.runTimeMessage.push(msg.src, msg.message, msg.millisecondTimestamp)
-                    runTimeMessageList[msg.src]!!.add(m!!)
-                    runTimeMessageList[msg.src]?.sortBy { it.time }
+                    if (m != null) {
+                        m.time = msg.millisecondTimestamp
+                        RunTimeData.runTimeMessage.push(
+                            msg.src,
+                            msg.message,
+                            msg.millisecondTimestamp
+                        )
+                        runTimeMessageList[msg.src]!!.add(m)
+                        runTimeMessageList[msg.src]?.sortBy { it.time }
+                    }
                 } catch (e: Exception) {
                     Log.e("DataSource", "Load user message error near ${entry.key}\n$e")
                 }
@@ -130,13 +145,38 @@ object DataSource {
         return Result.Error("Post Fail")
     }
 
-    fun sendImg(msg: UserMessageOuterClass.UserMessage, bitmap: Bitmap): Result<String> {
-        val output = ByteArrayOutputStream()
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, output)
-        val res = output.toByteArray()
+    fun send(protoc: ProtocolOuterClass.Protocol): Result<String> {
+        val rt = post(protoc)
+        if (rt is Result.Success)
+            return Result.Success("")
+        return Result.Error("Post Fail")
+    }
 
-        val b = Base64.getEncoder().encodeToString(res)
-        val s = ByteString.copyFromUtf8(b)
+    fun updateIcon(filename: String, bitmap: Bitmap): Result<String> {
+        val s = toBase64(bitmap)
+        Log.d("DataSource", "user try update icon")
+        val protoc = ProtocBuilder()
+            .requireUpdate()
+            .putPairs("icon", filename)
+            .putBytes(filename, s)
+            .buildValid()
+
+        val rt = post(protoc)
+        if (rt is Result.Success)
+            return Result.Success("")
+        return Result.Error("Post Fail")
+    }
+
+    fun responseContact(des: String): Result<String> {
+        val protoc = ProtocBuilder().putPairs("des_uid", des).responseContact().buildValid()
+        val rt = post(protoc)
+        if (rt is Result.Success)
+            return Result.Success("")
+        return Result.Error("Post Fail")
+    }
+
+    fun sendImg(msg: UserMessageOuterClass.UserMessage, bitmap: Bitmap): Result<String> {
+        val s = toBase64(bitmap)
 
         val protoc = ProtocBuilder()
             .sendMessage(msg.des, msg)
@@ -147,6 +187,16 @@ object DataSource {
         if (rt is Result.Success)
             return Result.Success("")
         return Result.Error("Post Fail")
+    }
+
+
+    private fun toBase64(bitmap: Bitmap): ByteString {
+        val output = ByteArrayOutputStream()
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, output)
+        val res = output.toByteArray()
+
+        val b = Base64.getEncoder().encodeToString(res)
+        return ByteString.copyFromUtf8(b)
     }
 
 }

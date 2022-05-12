@@ -90,7 +90,9 @@ class ChatActivity : AppCompatActivity(), View.OnClickListener {
      */
     private var functionKeyType = 0
 
-    private lateinit var popupMenu:PopupMenu
+    private lateinit var popupMenu: PopupMenu
+
+    private lateinit var functionMenu: PopupMenu
 
     companion object {
         /**
@@ -135,16 +137,17 @@ class ChatActivity : AppCompatActivity(), View.OnClickListener {
 
         // menu icon
         val menu: ImageView = findViewById(R.id.activity_chat_head_menu)
-        val popupMenu = PopupMenu(this, menu)
+        menu.setOnClickListener(this)
+        popupMenu = PopupMenu(this, menu)
         popupMenu.menuInflater.inflate(R.menu.menu_chat, popupMenu.menu);
-        popupMenu.setOnMenuItemClickListener{
+        popupMenu.setOnMenuItemClickListener {
 
             return@setOnMenuItemClickListener false
         }
         popupMenu.setOnDismissListener {
 
         }
-        menu.setOnClickListener(this)
+
 
         // title
         val title: TextView = findViewById(R.id.activity_chat_head_message_title)
@@ -162,6 +165,21 @@ class ChatActivity : AppCompatActivity(), View.OnClickListener {
         // function_key icon
         val functionKey: ImageView = findViewById(R.id.activity_chat_foot_function_keys)
         functionKey.setOnClickListener(this)
+        functionMenu = PopupMenu(this, functionKey)
+        functionMenu.menuInflater.inflate(R.menu.munu_function, functionMenu.menu);
+        functionMenu.setOnMenuItemClickListener {
+            when(it.itemId) {
+                R.id.menu_function_location->{
+
+                }
+                else ->{}
+            }
+            return@setOnMenuItemClickListener false
+        }
+        functionMenu.setOnDismissListener {
+
+        }
+
 
         // message witch user inputs
         val editText: EditText = findViewById(R.id.activity_chat_foot_input)
@@ -190,7 +208,6 @@ class ChatActivity : AppCompatActivity(), View.OnClickListener {
             // activity_chat_head
             R.id.activity_chat_head_back -> this.finish()
             R.id.activity_chat_head_menu -> onMenuClicked()
-            R.id.activity_chat_head_message_title -> onTitleClicked()
             // activity_chat_foot
             R.id.activity_chat_foot_video_call -> onVideoCallClicked()
             R.id.activity_chat_foot_emoji_emotions -> onEmojiClicked()
@@ -201,7 +218,7 @@ class ChatActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun onMenuClicked() {
-        popupMenu.show();
+        popupMenu.show()
     }
 
     private fun onTitleClicked() {
@@ -218,7 +235,6 @@ class ChatActivity : AppCompatActivity(), View.OnClickListener {
             Manifest.permission.WRITE_EXTERNAL_STORAGE,
             Manifest.permission.READ_EXTERNAL_STORAGE
         )
-
         val checkWrite = ContextCompat.checkSelfPermission(this, p[0])
         val checkRead = ContextCompat.checkSelfPermission(this, p[1])
         val ok = PackageManager.PERMISSION_GRANTED
@@ -253,7 +269,6 @@ class ChatActivity : AppCompatActivity(), View.OnClickListener {
             editText.setText("")
             try {
                 Thread {
-
                     val m = MessageBuilder()
                         .setDesUid(tarUid)
                         .setMessage(text)
@@ -275,10 +290,8 @@ class ChatActivity : AppCompatActivity(), View.OnClickListener {
                         }
                     }
                 }.start()
-
-
             } catch (e: Exception) {
-                Log.d("Send Message", e.toString())
+                Log.d("Send Message error", e.toString())
                 Toast.makeText(this, R.string.send_failed, Toast.LENGTH_SHORT).show()
             }
         }

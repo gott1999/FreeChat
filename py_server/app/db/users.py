@@ -53,9 +53,41 @@ sql_getIcon = '''
 SELECT `user_b_data`.`icon` as icon FROM `user_b_data` where uid=%s;
 '''
 
-sql_update_user_data = '''
-update %s set %s where uid=%s 
+sql_update_user_icon = '''
+update user_b_data set icon=%s where uid=%s 
 '''
+
+sql_update_user_display_name = '''
+update user_b_data set display_name=%s where uid=%s 
+'''
+
+sql_update_user_upassword = '''
+update user_u_data set upassword=%s where uid=%s 
+'''
+
+sql_del_relationship = """
+delete from `user_relationship` where src_uid=%s tar_uid=%s;
+"""
+
+sql_add_relationship = """
+insert into `user_relationship` (src_uid,tar_uid) values(%s,%s);
+"""
+
+sql_get_relationship = """
+select count(tar_uid) as count from `user_relationship` where src_uid=%s and tar_uid=%s; 
+"""
+
+sql_get_uid = """
+select uid from `user_u_data` where uname=%s
+"""
+
+
+def getUid(des: str):
+    with connect(**properties) as conn:
+        with conn.cursor(cursor=cursors.DictCursor) as cursor:
+            cursor.execute(sql_get_uid, des)
+            res = cursor.fetchone()
+    return res
 
 
 def login(username: str, password: str):
@@ -98,7 +130,8 @@ def register(username: str, password: str):
                     if user_u_data:
 
                         # Try to add base data
-                        result_insert = cursor.execute(sql_insert_new_user_base, (user_u_data["uid"], username, username))
+                        result_insert = cursor.execute(sql_insert_new_user_base,
+                                                       (user_u_data["uid"], username, username))
                         conn.commit()
                         if result_insert == 1:
                             res = True
@@ -159,22 +192,71 @@ def getIcon(uid: str):
     return res["icon"]
 
 
-def updateUserData(table_name: str, datas, uid: str):
+def updateDisplayName(name: str, uid: str):
     """
     db operation - update user base data
-    :param table_name:
-    :param datas: {col:value, ....}
+    :param name:
     :param uid:
     :return:
     """
-    string = ""
-    for key, value in datas.items():
-        if len(string) > 0:
-            string += ","
-        string += "%s=%s" % (key, value)
-
     with connect(**properties) as conn:
         with conn.cursor(cursor=cursors.DictCursor) as cursor:
-            res = cursor.execute(sql_update_user_data, (table_name, string, uid))
+            res = cursor.execute(sql_update_user_display_name, (name, uid))
+            conn.commit()
+    return res
+
+
+def updateIcon(icon: str, uid: str):
+    """
+    db operation - update user base data
+    :param icon:
+    :param uid:
+    :return:
+    """
+    with connect(**properties) as conn:
+        with conn.cursor(cursor=cursors.DictCursor) as cursor:
+            res = cursor.execute(sql_update_user_icon, (icon, uid))
+            conn.commit()
+    return res
+
+
+def updateUserUpassword(pwd: str, uid: str):
+    """
+    db operation - update user base data
+    :param pwd:
+    :param uid:
+    :return:
+    """
+    with connect(**properties) as conn:
+        with conn.cursor(cursor=cursors.DictCursor) as cursor:
+            res = cursor.execute(sql_update_user_upassword, (pwd, uid))
+            conn.commit()
+    return res
+
+
+
+def delRelationShip(src: str, des: str):
+    with connect(**properties) as conn:
+        with conn.cursor(cursor=cursors.DictCursor) as cursor:
+            res = cursor.execute(sql_del_relationship, (src, des))
+            conn.commit()
+    return res
+
+
+def addRelationShip(src: str, des: str):
+    with connect(**properties) as conn:
+        with conn.cursor(cursor=cursors.DictCursor) as cursor:
+            res = 0
+
+            cursor.execute(sql_get_relationship, (src, des))
+            r = cursor.fetchone()
+            if r["count"] == 0:
+                res += cursor.execute(sql_add_relationship, (src, des))
+
+            cursor.execute(sql_get_relationship, (des, src))
+            r = cursor.fetchone()
+            if r["count"] == 0:
+                res += cursor.execute(sql_add_relationship, (des, src))
+
             conn.commit()
     return res

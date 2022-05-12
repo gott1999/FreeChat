@@ -24,6 +24,7 @@ abstract class BaseFragment(private val resource: Int) : Fragment() {
             onInit()
             isInit = true
         }
+        wake()
     }
 
     abstract fun onInit()

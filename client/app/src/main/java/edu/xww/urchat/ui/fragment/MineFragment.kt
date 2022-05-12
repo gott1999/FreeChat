@@ -6,10 +6,23 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import edu.xww.urchat.R
+import edu.xww.urchat.data.runtime.LoginStatus
 import edu.xww.urchat.ui.adapter.recyclerview.MineAdaptor
 import edu.xww.urchat.data.struct.system.CommonRecyclerViewItem
 
 class MineFragment(private val m_Context: Context) : BaseFragment(R.layout.fragment_mine) {
+
+    companion object {
+        fun updateUserInfo(displayName: String) {
+            list?.get(0)?.displayName = displayName
+        }
+
+        fun updateUserIcon(name: String) {
+            list?.get(0)?.icon = name
+        }
+
+        var list: MutableList<CommonRecyclerViewItem>? = null
+    }
 
     private lateinit var recyclerView: RecyclerView
 
@@ -29,10 +42,33 @@ class MineFragment(private val m_Context: Context) : BaseFragment(R.layout.fragm
         recyclerView.setHasFixedSize(true)
         recyclerView.layoutManager =
             StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL)
-        recyclerView.adapter = MineAdaptor(
-            m_Context, arrayListOf(
-                CommonRecyclerViewItem("", m_Context.getString(R.string.fragment_me), "system"),
-                CommonRecyclerViewItem("", m_Context.getString(R.string.logged_out), "system")
+        if (list == null) {
+            getList()
+        }
+        recyclerView.adapter = MineAdaptor(m_Context, list!!)
+    }
+
+    private fun getList() {
+        list = arrayListOf(
+            CommonRecyclerViewItem(
+                LoginStatus.loggedInUser?.icon ?: "",
+                LoginStatus.loggedInUser?.displayName ?: "",
+                m_Context.getString(R.string.info)
+            ),
+            CommonRecyclerViewItem(
+                "",
+                m_Context.getString(R.string.update_info),
+                m_Context.getString(R.string.update_info)
+            ),
+            CommonRecyclerViewItem(
+                "",
+                m_Context.getString(R.string.newfriend),
+                m_Context.getString(R.string.fragment_contact)
+            ),
+            CommonRecyclerViewItem(
+                "",
+                m_Context.getString(R.string.logged_out),
+                m_Context.getString(R.string.system)
             )
         )
     }

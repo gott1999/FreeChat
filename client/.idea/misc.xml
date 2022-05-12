@@ -37,8 +37,10 @@
         <entry key="..\:/workspace/UrChat/client/app/src/main/res/layout/activity_chat_message_right.xml" value="0.2" />
         <entry key="..\:/workspace/UrChat/client/app/src/main/res/layout/activity_chat_message_right_img.xml" value="0.20820863616930313" />
         <entry key="..\:/workspace/UrChat/client/app/src/main/res/layout/activity_chat_message_right_text.xml" value="0.20820863616930313" />
+        <entry key="..\:/workspace/UrChat/client/app/src/main/res/layout/activity_info.xml" value="0.264" />
         <entry key="..\:/workspace/UrChat/client/app/src/main/res/layout/activity_login.xml" value="0.20820863616930313" />
         <entry key="..\:/workspace/UrChat/client/app/src/main/res/layout/activity_main.xml" value="0.2" />
+        <entry key="..\:/workspace/UrChat/client/app/src/main/res/layout/activity_new_friend.xml" value="0.20820863616930313" />
         <entry key="..\:/workspace/UrChat/client/app/src/main/res/layout/activity_welcome.xml" value="0.2" />
         <entry key="..\:/workspace/UrChat/client/app/src/main/res/layout/common_list_item.xml" value="0.20820863616930313" />
         <entry key="..\:/workspace/UrChat/client/app/src/main/res/layout/common_title.xml" value="0.20820863616930313" />
@@ -54,8 +56,10 @@
         <entry key="..\:/workspace/UrChat/client/app/src/main/res/layout/fragment_mine_items.xml" value="0.20820863616930313" />
         <entry key="..\:/workspace/UrChat/client/app/src/main/res/layout/recycle_item_message.xml" value="0.264" />
         <entry key="..\:/workspace/UrChat/client/app/src/main/res/layout/tool_search.xml" value="0.2" />
+        <entry key="..\:/workspace/UrChat/client/app/src/main/res/menu/menu_agree.xml" value="0.20820863616930313" />
         <entry key="..\:/workspace/UrChat/client/app/src/main/res/menu/menu_chat.xml" value="0.20820863616930313" />
         <entry key="..\:/workspace/UrChat/client/app/src/main/res/menu/menu_main.xml" value="0.25364583333333335" />
+        <entry key="..\:/workspace/UrChat/client/app/src/main/res/menu/munu_function.xml" value="0.20820863616930313" />
         <entry key="..\:/workspace/UrChat/client/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.142" />
         <entry key="..\:/workspace/UrChat/client/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" value="0.202" />
       </map>
