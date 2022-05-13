@@ -11,8 +11,9 @@ import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import edu.xww.urchat.R
-import edu.xww.urchat.data.loader.ResourcesLoader
-import edu.xww.urchat.data.runtime.LoginStatus
+import edu.xww.urchat.data.loader.SImageLoader
+import edu.xww.urchat.data.preserver.SResourcesPreserver
+import edu.xww.urchat.data.runtime.SLoginStatus
 import edu.xww.urchat.data.struct.Result
 import edu.xww.urchat.network.builder.ProtocBuilder
 import edu.xww.urchat.network.source.DataSource
@@ -26,16 +27,15 @@ class InfoActivity : AppCompatActivity() {
         if (it != null) {
             try {
                 Thread {
-                    Log.d("InfoActivity/select", "get picture ${it.path}")
                     val filename = "${it.hashCode()}.png"
                     val photoBmp = MediaStore.Images.Media.getBitmap(contentResolver, it)
-                    ResourcesLoader.saveImage(this, filename, photoBmp)
+                    SResourcesPreserver.saveImage(this, filename, photoBmp)
 
                     val res = DataSource.updateIcon(filename, photoBmp)
 
                     if (res is Result.Success) {
                         Log.d("InfoActivity/select", "success update icon")
-                        LoginStatus.loggedInUser!!.icon = filename
+                        SLoginStatus.userBasicData!!.icon = filename
 
                         MineFragment.updateUserIcon(filename)
 
@@ -55,14 +55,8 @@ class InfoActivity : AppCompatActivity() {
                     }
                 }.start()
             } catch (e: Exception) {
-                this.runOnUiThread {
-                    Toast.makeText(
-                        this,
-                        R.string.send_failed,
-                        Toast.LENGTH_SHORT
-                    )
-                }
-                e.printStackTrace()
+                this.runOnUiThread { Toast.makeText(this,R.string.send_failed,Toast.LENGTH_SHORT) }
+                Log.e("InfoActivity/select/Thread", "$e")
             }
         } else {
             this.runOnUiThread { Toast.makeText(this, R.string.cancel, Toast.LENGTH_SHORT) }
@@ -81,21 +75,24 @@ class InfoActivity : AppCompatActivity() {
         setContentView(R.layout.activity_info)
 
         imageView = findViewById(R.id.activity_info_img)
-        ResourcesLoader.setImageBitmap(this, imageView, LoginStatus.loggedInUser?.icon ?: "")
+        SImageLoader.setImageView(this, imageView, SLoginStatus.userBasicData?.icon ?: "")
         imageView.setOnClickListener { select.launch("image/*") }
 
         displayNameE = findViewById(R.id.activity_info_display_name)
         pwdE = findViewById(R.id.activity_info_new_password)
-        submit = findViewById(R.id.activity_info_commit)
 
+        cancel = findViewById(R.id.activity_info_exit)
+        cancel.setOnClickListener { this.finish() }
+
+        submit = findViewById(R.id.activity_info_commit)
         submit.setOnClickListener {
             Log.d("InfoActivity/submit", "user try submit")
             var pwd = pwdE.text.toString()
             val d = displayNameE.text.toString()
             Thread {
                 val p = ProtocBuilder()
-                if (d.isNotEmpty() && d != "" && d != LoginStatus.loggedInUser!!.displayName) {
-                    p.putPairs("displayName", "displayName")
+                if (d.isNotEmpty() && d != "" && d != SLoginStatus.userBasicData!!.displayName) {
+                    p.putPairs("displayName", d)
                 }
                 if (pwd.length >= 6) {
                     p.putPairs("upassword", pwd)
@@ -111,17 +108,21 @@ class InfoActivity : AppCompatActivity() {
 
                     this.runOnUiThread {
                         if (pwd.length >= 6 && d.isNotEmpty() && d != "") {
-                            LoginStatus.loggedInUser!!.displayName = d
+                            SLoginStatus.userBasicData!!.displayName = d
                             MineFragment.updateUserInfo(d)
-                            Toast.makeText(this, R.string.update_password, Toast.LENGTH_SHORT).show()
-                        }else if (pwd.length >= 6) {
-                            Toast.makeText(this, R.string.update_password, Toast.LENGTH_SHORT).show()
-                        } else if (d.isNotEmpty() && d != ""){
-                            LoginStatus.loggedInUser!!.displayName = d
+                            Toast.makeText(this, R.string.update_password, Toast.LENGTH_SHORT)
+                                .show()
+                        } else if (pwd.length >= 6) {
+                            Toast.makeText(this, R.string.update_password, Toast.LENGTH_SHORT)
+                                .show()
+                        } else if (d.isNotEmpty() && d != "") {
+                            SLoginStatus.userBasicData!!.displayName = d
                             MineFragment.updateUserInfo(d)
-                            Toast.makeText(this, R.string.update_positive, Toast.LENGTH_SHORT).show()
+                            Toast.makeText(this, R.string.update_positive, Toast.LENGTH_SHORT)
+                                .show()
                         } else {
-                            Toast.makeText(this, R.string.update_positive, Toast.LENGTH_SHORT).show()
+                            Toast.makeText(this, R.string.update_positive, Toast.LENGTH_SHORT)
+                                .show()
                         }
                     }
 
@@ -134,8 +135,6 @@ class InfoActivity : AppCompatActivity() {
             }.start()
         }
 
-        cancel = findViewById(R.id.activity_info_exit)
-        cancel.setOnClickListener { this.finish() }
 
     }
 }

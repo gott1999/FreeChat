@@ -1,7 +1,7 @@
 package edu.xww.urchat.network.source
 
 import android.util.Log
-import edu.xww.urchat.data.struct.user.LoggedInUser
+import edu.xww.urchat.data.struct.user.UserBasicData
 import edu.xww.urchat.data.struct.Result
 import edu.xww.urchat.network.builder.ProtocBuilder
 import edu.xww.urchat.network.proto.ProtocolOuterClass
@@ -11,7 +11,7 @@ object LoginSource {
     /**
      * post login request
      */
-    fun login(server: String, port: Int, username: String, password: String): Result<LoggedInUser> {
+    fun login(server: String, port: Int, username: String, password: String): Result<UserBasicData> {
         val pb = ProtocBuilder().requireLogin(username, password).buildValid()
         return post(pb, server, port)
     }
@@ -24,7 +24,7 @@ object LoginSource {
         port: Int,
         username: String,
         password: String
-    ): Result<LoggedInUser> {
+    ): Result<UserBasicData> {
         val pb = ProtocBuilder().requireRegister(username, password).buildValid()
         return post(pb, server, port)
     }
@@ -36,7 +36,7 @@ object LoginSource {
         pt: ProtocolOuterClass.Protocol,
         server: String,
         port: Int
-    ): Result<LoggedInUser> {
+    ): Result<UserBasicData> {
         return try {
             val rt = SocketHelper.sendRequest(pt, server, port) ?: return Result.Error("Can't connect to server")
 
@@ -53,7 +53,7 @@ object LoginSource {
                 throw Exception("Data lost!")
             }
 
-            Result.Success(LoggedInUser(0, mp["uid"]!!, mp["displayName"]!!, mp["icon"]?:"", mp["key"]!!))
+            Result.Success(UserBasicData(0, mp["uid"]!!, mp["displayName"]!!, mp["icon"]?:"", mp["key"]!!))
         } catch (e: Exception) {
             Result.Error(e.toString())
         }

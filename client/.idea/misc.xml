@@ -34,9 +34,13 @@
         <entry key="..\:/workspace/UrChat/client/app/src/main/res/layout/activity_chat_message_left.xml" value="0.12825994014536127" />
         <entry key="..\:/workspace/UrChat/client/app/src/main/res/layout/activity_chat_message_left_img.xml" value="0.20820863616930313" />
         <entry key="..\:/workspace/UrChat/client/app/src/main/res/layout/activity_chat_message_left_text.xml" value="0.20820863616930313" />
+        <entry key="..\:/workspace/UrChat/client/app/src/main/res/layout/activity_chat_message_receive_img.xml" value="0.20820863616930313" />
+        <entry key="..\:/workspace/UrChat/client/app/src/main/res/layout/activity_chat_message_reveive_text.xml" value="0.20820863616930313" />
         <entry key="..\:/workspace/UrChat/client/app/src/main/res/layout/activity_chat_message_right.xml" value="0.2" />
         <entry key="..\:/workspace/UrChat/client/app/src/main/res/layout/activity_chat_message_right_img.xml" value="0.20820863616930313" />
         <entry key="..\:/workspace/UrChat/client/app/src/main/res/layout/activity_chat_message_right_text.xml" value="0.20820863616930313" />
+        <entry key="..\:/workspace/UrChat/client/app/src/main/res/layout/activity_chat_message_send_img.xml" value="0.20820863616930313" />
+        <entry key="..\:/workspace/UrChat/client/app/src/main/res/layout/activity_chat_message_send_text.xml" value="0.20820863616930313" />
         <entry key="..\:/workspace/UrChat/client/app/src/main/res/layout/activity_info.xml" value="0.264" />
         <entry key="..\:/workspace/UrChat/client/app/src/main/res/layout/activity_login.xml" value="0.20820863616930313" />
         <entry key="..\:/workspace/UrChat/client/app/src/main/res/layout/activity_main.xml" value="0.2" />

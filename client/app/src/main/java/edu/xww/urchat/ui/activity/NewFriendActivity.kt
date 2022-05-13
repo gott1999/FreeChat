@@ -11,13 +11,11 @@ import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import edu.xww.urchat.R
-import edu.xww.urchat.data.runtime.LoginStatus
-import edu.xww.urchat.data.runtime.RunTimeData
+import edu.xww.urchat.data.runtime.SLoginStatus
+import edu.xww.urchat.data.runtime.SRuntimeData
 import edu.xww.urchat.data.struct.Result
-import edu.xww.urchat.data.struct.system.CommonRecyclerViewItem
 import edu.xww.urchat.network.builder.MessageBuilder
 import edu.xww.urchat.network.source.DataSource
-import edu.xww.urchat.ui.adapter.recyclerview.MineAdaptor
 import edu.xww.urchat.ui.adapter.recyclerview.NewFriendAdaptor
 
 class NewFriendActivity : AppCompatActivity() {
@@ -46,7 +44,7 @@ class NewFriendActivity : AppCompatActivity() {
         recyclerView.setHasFixedSize(true)
         recyclerView.layoutManager =
             StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL)
-        recyclerView.adapter = NewFriendAdaptor(this, RunTimeData.newContacts)
+        recyclerView.adapter = NewFriendAdaptor(this, SRuntimeData.SNewContacts)
 
         et = findViewById(R.id.activity_new_friend_input)
         button = findViewById(R.id.activity_new_friend_button)
@@ -58,7 +56,7 @@ class NewFriendActivity : AppCompatActivity() {
                         val m = MessageBuilder()
                                 // 此时uid承载的是uname
                             .setDesUid(uid)
-                            .setMessage("${LoginStatus.loggedInUser!!.displayName} 请求添加为好友")
+                            .setMessage("${SLoginStatus.userBasicData!!.displayName} 请求添加为好友")
                             .setType(MessageBuilder.Type.ADD)
                             .build()
 

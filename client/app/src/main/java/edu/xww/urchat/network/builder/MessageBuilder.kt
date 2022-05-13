@@ -1,6 +1,6 @@
 package edu.xww.urchat.network.builder
 
-import edu.xww.urchat.data.runtime.LoginStatus
+import edu.xww.urchat.data.runtime.SLoginStatus
 import edu.xww.urchat.network.proto.UserMessageOuterClass
 
 class MessageBuilder {
@@ -8,19 +8,14 @@ class MessageBuilder {
     enum class Type {
         // pure text
         TEXT,
-
         // image
         IMAGE,
-
         // position
         POSITION,
-
         // Binary
         BINARY,
-
         // add
         ADD,
-
         // del
         DEL,
     }
@@ -30,8 +25,8 @@ class MessageBuilder {
     init {
         builder.type = UserMessageOuterClass.MessageType.TEXT
 
-        if (LoginStatus.loggedInUser != null)
-            builder.src = LoginStatus.loggedInUser!!.uniqueId
+        if (SLoginStatus.userBasicData != null)
+            builder.src = SLoginStatus.userBasicData!!.uniqueId
         else
             builder.src = ""
     }

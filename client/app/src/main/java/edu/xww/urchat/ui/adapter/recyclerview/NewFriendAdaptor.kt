@@ -7,10 +7,10 @@ import android.view.View
 import android.widget.PopupMenu
 import android.widget.Toast
 import edu.xww.urchat.R
+import edu.xww.urchat.data.loader.SConversationLoader
 import edu.xww.urchat.data.struct.Result
 
 import edu.xww.urchat.data.struct.system.CommonRecyclerViewItem
-import edu.xww.urchat.network.builder.MessageBuilder
 import edu.xww.urchat.network.source.DataSource
 import java.util.concurrent.locks.ReentrantLock
 
@@ -29,28 +29,30 @@ class NewFriendAdaptor(
         popupMenu.setOnMenuItemClickListener {
             when (it.itemId) {
                 R.id.menu_positive -> {
-                    if (!lock.isLocked) {
-                        lock.lock()
-                        Thread {
-                            val res = DataSource.responseContact(item.uid)
-                            if (res is Result.Success) {
-                                // success
-                                Log.d("ChatActivity", "Add '$item.uid'")
-                                list.removeAt(position)
-                            } else {
-                                view.post {
-                                    Toast.makeText(
-                                        m_Context,
-                                        R.string.send_failed,
-                                        Toast.LENGTH_SHORT
-                                    ).show()
-                                    this.notifyDataSetChanged()
-                                }
-                            }
-                        }.start()
-                        lock.unlock()
-                    } else {
+                    if (lock.isLocked) {
                         Toast.makeText(m_Context, R.string.waitting, Toast.LENGTH_SHORT).show()
+                    } else {
+                        synchronized(lock) {
+                            Thread {
+                                val res = DataSource.responseContact(item.uid)
+                                if (res is Result.Success) {
+                                    // success
+                                    list.removeAt(position)
+                                    view.post {
+                                        SConversationLoader.updateContact()
+                                        this.notifyDataSetChanged()
+                                    }
+                                } else {
+                                    view.post {
+                                        Toast.makeText(
+                                            m_Context,
+                                            R.string.send_failed,
+                                            Toast.LENGTH_SHORT
+                                        ).show()
+                                    }
+                                }
+                            }.start()
+                        }
                     }
                 }
                 else -> {
@@ -58,8 +60,7 @@ class NewFriendAdaptor(
                     this.notifyDataSetChanged()
                 }
             }
-
-            return@setOnMenuItemClickListener false
+            false
         }
         popupMenu.show()
     }

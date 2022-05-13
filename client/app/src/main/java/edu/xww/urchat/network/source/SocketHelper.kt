@@ -2,7 +2,7 @@ package edu.xww.urchat.network.source
 
 import android.util.Log
 import com.google.protobuf.ByteString
-import edu.xww.urchat.data.runtime.RunTimeData
+import edu.xww.urchat.data.runtime.SRuntimeData
 import edu.xww.urchat.network.dispatcher.ClientDispatcher
 import edu.xww.urchat.network.builder.ProtocBuilder
 import edu.xww.urchat.network.proto.ProtocolOuterClass
@@ -25,7 +25,7 @@ object SocketHelper {
      */
     fun sendRequest(
         request: ProtocolOuterClass.Protocol,
-        ip: String? = RunTimeData.serverIp["main"], port: Int? = RunTimeData.serverPort["main"]
+        ip: String? = SRuntimeData.SIP["main"], port: Int? = SRuntimeData.SPort["main"]
     ): ProtocolOuterClass.Protocol? {
         val host = ip ?: "127.0.0.1"
         val pt = port ?: 25565
@@ -83,7 +83,7 @@ object SocketHelper {
         try {
             serverSocket = ServerSocket(DEFAULT_CLIENT_PORT)
             while (isListen) {
-                val socket = serverSocket.accept();
+                val socket = serverSocket.accept()
                 try {
                     // in coming transmission
                     val inputStream = socket.getInputStream()

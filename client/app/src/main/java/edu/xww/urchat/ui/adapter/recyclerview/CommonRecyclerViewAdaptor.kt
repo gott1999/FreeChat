@@ -10,7 +10,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import edu.xww.urchat.R
 import edu.xww.urchat.data.struct.system.CommonRecyclerViewItem
-import edu.xww.urchat.data.loader.ResourcesLoader
+import edu.xww.urchat.data.loader.SImageLoader
 
 abstract class CommonRecyclerViewAdaptor(
     private val m_Context: Context,
@@ -47,7 +47,7 @@ abstract class CommonRecyclerViewAdaptor(
         }
 
         // set icon
-        ResourcesLoader.setImageBitmap(m_Context, holder.icon, curr.icon)
+        SImageLoader.setImageView(m_Context, holder.icon, curr.icon)
 
         // set display name
         holder.displayName.text = curr.displayName

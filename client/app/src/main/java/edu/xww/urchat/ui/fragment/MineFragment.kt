@@ -6,7 +6,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import edu.xww.urchat.R
-import edu.xww.urchat.data.runtime.LoginStatus
+import edu.xww.urchat.data.runtime.SLoginStatus
 import edu.xww.urchat.ui.adapter.recyclerview.MineAdaptor
 import edu.xww.urchat.data.struct.system.CommonRecyclerViewItem
 
@@ -22,6 +22,11 @@ class MineFragment(private val m_Context: Context) : BaseFragment(R.layout.fragm
         }
 
         var list: MutableList<CommonRecyclerViewItem>? = null
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        list = null
     }
 
     private lateinit var recyclerView: RecyclerView
@@ -51,8 +56,8 @@ class MineFragment(private val m_Context: Context) : BaseFragment(R.layout.fragm
     private fun getList() {
         list = arrayListOf(
             CommonRecyclerViewItem(
-                LoginStatus.loggedInUser?.icon ?: "",
-                LoginStatus.loggedInUser?.displayName ?: "",
+                SLoginStatus.userBasicData?.icon ?: "",
+                SLoginStatus.userBasicData?.displayName ?: "",
                 m_Context.getString(R.string.info)
             ),
             CommonRecyclerViewItem(
@@ -64,6 +69,11 @@ class MineFragment(private val m_Context: Context) : BaseFragment(R.layout.fragm
                 "",
                 m_Context.getString(R.string.newfriend),
                 m_Context.getString(R.string.fragment_contact)
+            ),
+            CommonRecyclerViewItem(
+                "",
+                m_Context.getString(R.string.setting),
+                m_Context.getString(R.string.system)
             ),
             CommonRecyclerViewItem(
                 "",

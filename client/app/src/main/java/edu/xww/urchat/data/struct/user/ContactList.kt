@@ -12,34 +12,34 @@ class ContactList {
     var size = 0
         private set
 
-    public fun clear() {
+    fun clear() {
         size = 0
         contracts.clear()
         uidToContract.clear()
     }
 
-    public operator fun get(index: Int): Contact {
+    operator fun get(index: Int): Contact {
         return contracts[index]
     }
 
-    public operator fun get(uid: String): Contact? {
+    operator fun get(uid: String): Contact? {
         return uidToContract[uid]
     }
 
-    public fun add(contract: Contact) {
+    operator fun plusAssign (contract: Contact) {
         contracts.add(contract)
-        uidToContract[contract.uId] = contract
+        uidToContract[contract.uid] = contract
         ++size
     }
 
-    public fun remove(index: Int) {
+    operator fun minusAssign (index: Int) {
         val (m_uId) = contracts[index]
         uidToContract.remove(m_uId)
         contracts.removeAt(index)
         --size
     }
 
-    public fun sort() {
+    fun sort() {
         contracts.sortBy { it.displayName }
     }
 }

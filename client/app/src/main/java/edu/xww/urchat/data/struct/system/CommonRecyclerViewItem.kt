@@ -5,5 +5,6 @@ open class CommonRecyclerViewItem (
     open var icon: String,
     open var displayName: String,
     open var tag: String,
-    open var uid: String = ""
-): java.io.Serializable
+    open var uid: String = "",
+    open var additionalInfo: String = ""
+)

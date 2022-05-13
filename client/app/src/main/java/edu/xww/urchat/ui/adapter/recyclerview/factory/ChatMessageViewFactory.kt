@@ -14,22 +14,22 @@ class ChatMessageViewFactory {
     }
 
     fun getIcon(view: View, viewType: Int): ImageView = when (viewType) {
-        Message.MessageType.RECEIVE_TEXT_NORMAL.ordinal -> view.findViewById(R.id.activity_chat_message_left_text_icon)
-        Message.MessageType.SEND_TEXT_NORMAL.ordinal -> view.findViewById(R.id.activity_chat_message_right_text_icon)
-        Message.MessageType.RECEIVE_IMAGE_NORMAL.ordinal -> view.findViewById(R.id.activity_chat_message_left_img_icon)
-        Message.MessageType.SEND_IMAGE_NORMAL.ordinal -> view.findViewById(R.id.activity_chat_message_right_img_icon)
+        Message.MessageType.TEXT_RECEIVE.ordinal -> view.findViewById(R.id.activity_chat_message_left_text_icon)
+        Message.MessageType.TEXT_SEND.ordinal -> view.findViewById(R.id.activity_chat_message_right_text_icon)
+        Message.MessageType.IMAGE_RECEIVE.ordinal -> view.findViewById(R.id.activity_chat_message_left_img_icon)
+        Message.MessageType.IMAGE_SEND.ordinal -> view.findViewById(R.id.activity_chat_message_right_img_icon)
         else -> throw IllegalArgumentException("Error argument during instancing 'NormalIcon'!")
     }
 
     fun getNormaImageView(view: View, viewType: Int): ImageView = when (viewType) {
-        Message.MessageType.RECEIVE_IMAGE_NORMAL.ordinal -> view.findViewById(R.id.activity_chat_message_left_img)
-        Message.MessageType.SEND_IMAGE_NORMAL.ordinal -> view.findViewById(R.id.activity_chat_message_right_img)
+        Message.MessageType.IMAGE_RECEIVE.ordinal -> view.findViewById(R.id.activity_chat_message_left_img)
+        Message.MessageType.IMAGE_SEND.ordinal -> view.findViewById(R.id.activity_chat_message_right_img)
         else -> throw IllegalArgumentException("Error argument during instancing 'NormalImageView'!")
     }
 
     fun getNormaTextView(view: View, viewType: Int): TextView = when (viewType) {
-        Message.MessageType.RECEIVE_TEXT_NORMAL.ordinal -> view.findViewById(R.id.activity_chat_message_left_text)
-        Message.MessageType.SEND_TEXT_NORMAL.ordinal -> view.findViewById(R.id.activity_chat_message_right_text)
+        Message.MessageType.TEXT_RECEIVE.ordinal -> view.findViewById(R.id.activity_chat_message_left_text)
+        Message.MessageType.TEXT_SEND.ordinal -> view.findViewById(R.id.activity_chat_message_right_text)
         else -> throw IllegalArgumentException("Error argument during instancing 'NormalTextView'!")
     }
 

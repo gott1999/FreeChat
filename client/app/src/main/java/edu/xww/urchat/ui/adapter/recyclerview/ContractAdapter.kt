@@ -10,14 +10,14 @@ import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import edu.xww.urchat.R
-import edu.xww.urchat.data.runtime.RunTimeData
-import edu.xww.urchat.data.loader.ResourcesLoader
+import edu.xww.urchat.data.runtime.SRuntimeData
+import edu.xww.urchat.data.loader.SImageLoader
 import edu.xww.urchat.ui.activity.ChatActivity
 
 class ContractAdapter(private val m_Context: Context) :
     RecyclerView.Adapter<ContractAdapter.ContractViewHolder>() {
 
-    private val contracts = RunTimeData.runTimeContacts
+    private val contracts = SRuntimeData.SContacts
 
     open inner class ContractViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val gap: TextView = view.findViewById(R.id.common_list_items_gap)
@@ -25,6 +25,8 @@ class ContractAdapter(private val m_Context: Context) :
         val displayName: TextView = view.findViewById(R.id.common_list_items_display_name)
         val layout: ConstraintLayout = itemView.findViewById(R.id.common_list_items_layout)
     }
+
+
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -48,15 +50,15 @@ class ContractAdapter(private val m_Context: Context) :
         }
 
         // set icon
-        ResourcesLoader.setImageBitmap(m_Context, holder.icon, curr.icon)
+        SImageLoader.setImageView(m_Context, holder.icon, curr.icon)
 
         // set display name
         holder.displayName.text = curr.displayName
 
         // set onclick
         holder.layout.setOnClickListener {
-            Log.d("ContractAdaptor", "Click ${curr.uId} : ${curr.displayName} ")
-            ChatActivity.startInstance(m_Context, curr.uId)
+            Log.d("ContractAdaptor", "Click ${curr.uid} : ${curr.displayName} ")
+            ChatActivity.startInstance(m_Context, curr.uid)
         }
 
     }

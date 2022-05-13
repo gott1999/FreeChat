@@ -4,9 +4,8 @@ import android.content.Intent
 import android.os.*
 import androidx.appcompat.app.AppCompatActivity
 import edu.xww.urchat.R
-import edu.xww.urchat.data.loader.LoaderManager
-import edu.xww.urchat.data.runtime.LoginStatus
-import edu.xww.urchat.data.runtime.RunTimeData
+import edu.xww.urchat.data.loader.SConversationLoader
+import edu.xww.urchat.data.runtime.SLoginStatus
 
 
 class Welcome : AppCompatActivity() {
@@ -14,7 +13,7 @@ class Welcome : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_welcome)
-        if (LoginStatus.isLoggedIn()) {
+        if (SLoginStatus.isLoggedIn()) {
             update()
             startActivity(Intent(this, MainActivity::class.java))
             finish()
@@ -25,8 +24,7 @@ class Welcome : AppCompatActivity() {
     }
 
     private fun update() {
-        LoaderManager.updateContact()
-        LoaderManager.updateMessage()
+        SConversationLoader.updateContact()
     }
 
 }

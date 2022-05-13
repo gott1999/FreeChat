@@ -9,9 +9,9 @@ import android.widget.TextView
 import androidx.recyclerview.widget.*
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import edu.xww.urchat.R
-import edu.xww.urchat.data.loader.LoaderManager
+import edu.xww.urchat.data.loader.SConversationLoader
 import edu.xww.urchat.ui.adapter.recyclerview.MessageAdapter
-import edu.xww.urchat.data.runtime.RunTimeData
+import edu.xww.urchat.data.runtime.SRuntimeData
 
 class MessageFragment(private val m_Context: Context) : BaseFragment(R.layout.fragment_message) {
 
@@ -26,8 +26,8 @@ class MessageFragment(private val m_Context: Context) : BaseFragment(R.layout.fr
 
     @SuppressLint("NotifyDataSetChanged")
     override fun wake() {
+        SConversationLoader.updateMessage()
         recyclerView.adapter?.notifyDataSetChanged()
-        Log.d("MessageFragment", "wakeup data:${RunTimeData.runTimeMessage.size()}")
     }
 
     private fun setParams() {
@@ -39,11 +39,13 @@ class MessageFragment(private val m_Context: Context) : BaseFragment(R.layout.fr
         recyclerView.adapter = MessageAdapter(m_Context)
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private fun setRefreshListener() {
         swipeRefreshLayout.setOnRefreshListener {
             Handler(Looper.getMainLooper()).postDelayed({
-                LoaderManager.updateMessage()
+                SConversationLoader.updateMessage()
                 swipeRefreshLayout.isRefreshing = false
+                recyclerView.adapter?.notifyDataSetChanged()
             }, 1000)
         }
     }

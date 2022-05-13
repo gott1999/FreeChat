@@ -11,7 +11,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import edu.xww.urchat.R
-import edu.xww.urchat.data.runtime.LoginStatus
+import edu.xww.urchat.data.runtime.SLoginStatus
 import edu.xww.urchat.data.struct.Result
 import edu.xww.urchat.util.Encode.hash
 import edu.xww.urchat.util.IpChecker
@@ -53,15 +53,15 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
         val uname = data.getString("uname", null)
         val upassword = data.getString("upassword", null)
         if (server != null && uname != null && upassword != null) {
-            lock.lock()
-            executorService.execute {
-                val res = LoginStatus.login(server, 25565, uname, upassword)
-                if (res is Result.Success) {
-                    startActivity(Intent(this, Welcome::class.java))
-                    finish()
+            synchronized(lock) {
+                executorService.execute {
+                    val res = SLoginStatus.login(server, 25565, uname, upassword)
+                    if (res is Result.Success) {
+                        startActivity(Intent(this, Welcome::class.java))
+                        finish()
+                    }
                 }
             }
-            lock.unlock()
         }
     }
 
@@ -95,26 +95,25 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
             Log.i("LoginActivity/Login", "User click more than one time")
             return
         }
-
-        lock.lock()
-        executorService.execute {
-            val p = hash(upassword)
-            val res = LoginStatus.login(server, 25565, uname, p)
-            if (res is Result.Success) {
-                startActivity(Intent(this, Welcome::class.java))
-                finish()
-            } else {
-                this.runOnUiThread {
-                    Toast.makeText(this, res.toString(), Toast.LENGTH_SHORT).show()
+        synchronized(lock) {
+            executorService.execute {
+                val p = hash(upassword)
+                val res = SLoginStatus.login(server, 25565, uname, p)
+                if (res is Result.Success) {
+                    startActivity(Intent(this, Welcome::class.java))
+                    finish()
+                } else {
+                    this.runOnUiThread {
+                        Toast.makeText(this, res.toString(), Toast.LENGTH_SHORT).show()
+                    }
                 }
+                val data = getSharedPreferences("user", Context.MODE_PRIVATE).edit()
+                data.putString("server", server)
+                data.putString("uname", uname)
+                data.putString("upassword", p)
+                data.apply()
             }
-            val data = getSharedPreferences("user", Context.MODE_PRIVATE).edit()
-            data.putString("server", server)
-            data.putString("uname", uname)
-            data.putString("upassword", p)
-            data.apply()
         }
-        lock.unlock()
     }
 
     @SuppressLint("CommitPrefEdits")
@@ -141,25 +140,25 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
             return
         }
 
-        lock.lock()
-        executorService.execute {
-            val p = hash(upassword)
-            val res = LoginStatus.register(server, 25565, uname, p)
-            if (res is Result.Success) {
-                startActivity(Intent(this, Welcome::class.java))
-                finish()
-            } else {
-                this.runOnUiThread {
-                    Toast.makeText(this, res.toString(), Toast.LENGTH_SHORT).show()
+        synchronized(lock) {
+            executorService.execute {
+                val p = hash(upassword)
+                val res = SLoginStatus.register(server, 25565, uname, p)
+                if (res is Result.Success) {
+                    startActivity(Intent(this, Welcome::class.java))
+                    finish()
+                } else {
+                    this.runOnUiThread {
+                        Toast.makeText(this, res.toString(), Toast.LENGTH_SHORT).show()
+                    }
                 }
+                val data = getSharedPreferences("user", Context.MODE_PRIVATE).edit()
+                data.putString("server", server)
+                data.putString("uname", uname)
+                data.putString("upassword", p)
+                data.apply()
             }
-            val data = getSharedPreferences("user", Context.MODE_PRIVATE).edit()
-            data.putString("server", server)
-            data.putString("uname", uname)
-            data.putString("upassword", p)
-            data.apply()
         }
-        lock.unlock()
     }
 
 }

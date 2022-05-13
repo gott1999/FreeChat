@@ -6,7 +6,7 @@ import android.content.Intent
 import android.view.View
 import android.widget.Toast
 import edu.xww.urchat.R
-import edu.xww.urchat.data.runtime.LoginStatus
+import edu.xww.urchat.data.runtime.SLoginStatus
 import edu.xww.urchat.data.struct.system.CommonRecyclerViewItem
 import edu.xww.urchat.ui.activity.InfoActivity
 import edu.xww.urchat.ui.activity.NewFriendActivity
@@ -24,7 +24,7 @@ class MineAdaptor(
                 val data = m_Context.getSharedPreferences("user", Context.MODE_PRIVATE).edit()
                 data.clear()
                 data.apply()
-                LoginStatus.logout()
+                SLoginStatus.logout()
                 val intent = Intent(m_Context, Welcome::class.java)
                 intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
                 m_Context.startActivity(intent)

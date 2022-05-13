@@ -1,6 +1,6 @@
 package edu.xww.urchat.data.struct.user
 
-import android.util.Log
+import edu.xww.urchat.network.proto.UserMessageOuterClass
 import java.util.concurrent.locks.ReentrantLock
 
 class MessageStack {
@@ -37,7 +37,8 @@ class MessageStack {
 
     private var uidToNode = HashMap<String, LinkedNode>()
 
-    private var size: Int = 0
+    var size: Int = 0
+        private set
 
     private var head = LinkedNode()
     private var tail = LinkedNode()
@@ -49,10 +50,6 @@ class MessageStack {
         tail.next = head
     }
 
-    fun size(): Int {
-        return size
-    }
-
     operator fun get(no: Int): MessageInfo? {
         return indexToNode[size - no - 1]?.info
     }
@@ -61,26 +58,32 @@ class MessageStack {
         return uidToNode[uid]?.info
     }
 
+    operator fun set(src: String, msg: UserMessageOuterClass.UserMessage) {
+        push(src, msg.message, msg.millisecondTimestamp)
+    }
+
+    operator fun set(src: String, msg: String) {
+        push(src, msg, System.currentTimeMillis())
+    }
+
     fun push(uid: String, msg: String, time: Long) {
         if (uidToNode[uid] == null) {
-            lock.lock()
-            Log.d("MessageStack", "Push $uid")
-            val node = LinkedNode(MessageInfo(uid, msg, time))
-            node.index = size
+            synchronized(lock) {
+                val node = LinkedNode(MessageInfo(uid, msg, time))
+                node.index = size
 
-            uidToNode[uid] = node
-            indexToNode[size] = node
+                uidToNode[uid] = node
+                indexToNode[size] = node
 
-            node.next = tail
-            node.prev = tail.prev
-            tail.prev?.next = node
-            tail.prev = node
+                node.next = tail
+                node.prev = tail.prev
+                tail.prev?.next = node
+                tail.prev = node
 
-            ++size
-            lock.unlock()
+                ++size
+            }
         } else {
             if (uidToNode[uid]?.info?.time!! > time) return
-            Log.d("MessageStack", "Update $uid ")
             remove(uid)
             push(uid, msg, time)
         }
@@ -88,30 +91,30 @@ class MessageStack {
     }
 
     fun remove(uid: String) {
-        lock.lock()
-        val node = uidToNode[uid]?: return
+        synchronized(lock) {
+            val node = uidToNode[uid] ?: return
 
-        uidToNode.remove(uid)
-        indexToNode.remove(node.index)
+            uidToNode.remove(uid)
+            indexToNode.remove(node.index)
 
-        var curr = node.next
+            var curr = node.next
 
-        node.prev?.next = node.next
-        node.next?.prev = node.prev
-        node.clear()
+            node.prev?.next = node.next
+            node.next?.prev = node.prev
+            node.clear()
 
-        while(curr != tail && curr != null) {
-            val index = uidToNode[uid]!!.index
+            while (curr != tail && curr != null) {
+                val index = uidToNode[uid]!!.index
 
-            indexToNode.remove(index)
-            indexToNode[index - 1] = curr
-            curr.index = index - 1
+                indexToNode.remove(index)
+                indexToNode[index - 1] = curr
+                curr.index = index - 1
 
-            curr = curr.next
+                curr = curr.next
+            }
+
+            --size
         }
-
-        --size
-        lock.unlock()
     }
 
     fun clear() {

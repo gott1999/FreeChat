@@ -58,9 +58,10 @@
     <string name="nagetive">nagetive</string>
     <string name="waitting">waiting for server</string>
     <string name="submit">submit</string>
-    <string name="cancel">cancel</string>
+    <string name="cancel">Cancel</string>
     <string name="change_icon">Click to change icon</string>
     <string name="info">info</string>
     <string name="update_password">Re-login after password modification to re-enter</string>
     <string name="update_positive">Update successful</string>
+    <string name="setting">setting</string>
 </resources>

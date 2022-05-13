@@ -9,29 +9,29 @@ class Message private constructor(
 
     companion object {
 
-        fun sendNormalText(string: String): Message =
-            Message(MessageType.SEND_TEXT_NORMAL, string)
+        fun sendNormalText(_message: String, _time: Long): Message =
+            Message(MessageType.TEXT_SEND, _message, _time)
 
-        fun receiveNormalText(string: String): Message =
-            Message(MessageType.RECEIVE_TEXT_NORMAL, string)
+        fun receiveNormalText(_message: String, _time: Long): Message =
+            Message(MessageType.TEXT_RECEIVE, _message, _time)
 
-        fun sendNormalImg(name: String): Message =
-            Message(MessageType.SEND_IMAGE_NORMAL, name)
+        fun sendNormalImg(_message: String, _time: Long): Message =
+            Message(MessageType.IMAGE_SEND, _message, _time)
 
-        fun receiveNormalImg(name: String): Message =
-            Message(MessageType.RECEIVE_IMAGE_NORMAL, name)
+        fun receiveNormalImg(_message: String, _time: Long): Message =
+            Message(MessageType.IMAGE_RECEIVE, _message, _time)
 
     }
 
     fun isMe(): Boolean = when (m_messageType) {
-        MessageType.SEND_TEXT_NORMAL -> true
-        MessageType.SEND_IMAGE_NORMAL -> true
+        MessageType.TEXT_SEND -> true
+        MessageType.IMAGE_SEND -> true
         else -> false
     }
 
     enum class MessageType {
-        SEND_TEXT_NORMAL, RECEIVE_TEXT_NORMAL,
-        SEND_IMAGE_NORMAL, RECEIVE_IMAGE_NORMAL
+        TEXT_SEND, TEXT_RECEIVE,
+        IMAGE_SEND, IMAGE_RECEIVE
     }
 
     public val typeId = m_messageType.ordinal

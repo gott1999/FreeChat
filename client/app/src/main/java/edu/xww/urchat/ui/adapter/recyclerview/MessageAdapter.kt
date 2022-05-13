@@ -9,8 +9,8 @@ import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import edu.xww.urchat.R
-import edu.xww.urchat.data.runtime.RunTimeData
-import edu.xww.urchat.data.loader.ResourcesLoader
+import edu.xww.urchat.data.runtime.SRuntimeData
+import edu.xww.urchat.data.loader.SImageLoader
 import edu.xww.urchat.ui.activity.ChatActivity
 import java.text.SimpleDateFormat
 import java.util.*
@@ -21,9 +21,9 @@ class MessageAdapter(private val mContext: Context) :
     @SuppressLint("SimpleDateFormat")
     val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
-    private val stk = RunTimeData.runTimeMessage
+    private val stk = SRuntimeData.SMessageBox
 
-    private val contacts = RunTimeData.runTimeContacts
+    private val contacts = SRuntimeData.SContacts
 
     inner class MessageRecyclerHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val layout: ConstraintLayout = itemView.findViewById(R.id.recycler_item_layout)
@@ -46,10 +46,10 @@ class MessageAdapter(private val mContext: Context) :
         holder.latestTime.text = sdf.format(Date(data.time))
         holder.layout.setOnClickListener { ChatActivity.startInstance(mContext, data.uid) }
         holder.layout.setOnLongClickListener { onMessageBoxLongClicked() }
-        ResourcesLoader.setImageBitmap(mContext, holder.logo, contact.icon)
+        SImageLoader.setImageView(mContext, holder.logo, contact.icon)
     }
 
-    override fun getItemCount(): Int = stk.size()
+    override fun getItemCount(): Int = stk.size
 
     private fun onMessageBoxLongClicked(): Boolean {
         return true

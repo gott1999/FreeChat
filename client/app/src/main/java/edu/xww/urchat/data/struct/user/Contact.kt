@@ -3,17 +3,15 @@ package edu.xww.urchat.data.struct.user
 import edu.xww.urchat.data.struct.system.CommonRecyclerViewItem
 
 data class Contact(
-    val uId: String,
+    override var uid: String,
     var name: String,
     override var icon: String,
     override var displayName: String,
     override var tag: String,
     val contractType: ContractType = ContractType.NORMAL
-) : CommonRecyclerViewItem(icon, displayName, tag), java.io.Serializable {
+) : CommonRecyclerViewItem(icon, displayName, tag) {
 
-    enum class ContractType {
-        NORMAL, SYSTEM, FOLD
-    }
+    enum class ContractType { NORMAL, SYSTEM, FOLD }
 
     companion object {
         fun buildNormal(
@@ -21,7 +19,7 @@ data class Contact(
             name: String,
             icon: String,
             displayName: String,
-            tag: String
+            tag: String = "#"
         ): Contact =
             Contact(uid, name, icon, displayName, tag, ContractType.NORMAL)
 
@@ -30,22 +28,16 @@ data class Contact(
             name: String,
             icon: String,
             displayName: String,
-            tag: String
         ): Contact =
-            Contact(uid, name, icon, displayName, tag, ContractType.SYSTEM)
+            Contact(uid, name, icon, displayName, "System", ContractType.SYSTEM)
 
         fun buildFold(
             uid: String,
             name: String,
             icon: String,
             displayName: String,
-            tag: String
         ): Contact =
-            Contact(uid, name, icon, displayName, tag, ContractType.FOLD)
+            Contact(uid, name, icon, displayName, "Fold", ContractType.FOLD)
     }
-
-    public val typeId = contractType.ordinal
-
-    public val typeName = contractType.name
 
 }

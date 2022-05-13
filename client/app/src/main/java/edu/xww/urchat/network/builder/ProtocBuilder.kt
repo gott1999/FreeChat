@@ -1,7 +1,7 @@
 package edu.xww.urchat.network.builder
 
 import com.google.protobuf.ByteString
-import edu.xww.urchat.data.runtime.LoginStatus
+import edu.xww.urchat.data.runtime.SLoginStatus
 import edu.xww.urchat.network.proto.ProtocolOuterClass
 import edu.xww.urchat.network.proto.UserMessageOuterClass
 
@@ -10,8 +10,8 @@ class ProtocBuilder {
     private val builder = ProtocolOuterClass.Protocol.newBuilder()
 
     init {
-        if (LoginStatus.loggedInUser != null)
-            builder.putConfig("UID", LoginStatus.loggedInUser!!.uniqueId)
+        if (SLoginStatus.userBasicData != null)
+            builder.putConfig("UID", SLoginStatus.userBasicData!!.uniqueId)
         else
             builder.putConfig("UID", "VISITOR")
     }

@@ -7,6 +7,7 @@ import android.content.pm.PackageManager
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
+import android.view.MenuItem
 import android.view.View
 import android.widget.*
 import androidx.activity.result.contract.ActivityResultContracts
@@ -17,9 +18,9 @@ import androidx.core.widget.doAfterTextChanged
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import edu.xww.urchat.R
-import edu.xww.urchat.data.loader.ResourcesLoader
-import edu.xww.urchat.data.runtime.RunTimeData
-import edu.xww.urchat.data.runtime.RunTimeData.runTimeMessageList
+import edu.xww.urchat.data.preserver.SResourcesPreserver
+import edu.xww.urchat.data.runtime.SRuntimeData
+import edu.xww.urchat.data.runtime.SRuntimeData.SMessageList
 import edu.xww.urchat.data.struct.Result
 import edu.xww.urchat.data.struct.user.Message
 import edu.xww.urchat.data.struct.user.Message.Companion.sendNormalImg
@@ -29,27 +30,52 @@ import edu.xww.urchat.network.source.DataSource
 import edu.xww.urchat.ui.adapter.recyclerview.ChatMessageAdapter
 
 
-class ChatActivity : AppCompatActivity(), View.OnClickListener {
+class ChatActivity : AppCompatActivity(), View.OnClickListener, PopupMenu.OnMenuItemClickListener {
 
-    private var tarUid = ""
+    /**
+     * tarUid
+     */
+    private lateinit var tarUid: String
 
-    private var displayTitle = ""
+    /**
+     * title message
+     */
+    private lateinit var title: String
 
-    private var messageList: ArrayList<Message>? = null
+    /**
+     * MessageList cache
+     */
+    private lateinit var messageList: ArrayList<Message>
 
+    /**
+     * recyclerView
+     */
     private lateinit var recyclerView: RecyclerView
 
+    /**
+     * PopupMenu of menu
+     */
+    private lateinit var menuMenu: PopupMenu
+
+    /**
+     * PopupMenu of function
+     */
+    private lateinit var functionMenu: PopupMenu
+
+    /**
+     * Image selecter
+     */
     private val select = registerForActivityResult(ActivityResultContracts.GetContent()) {
         if (it != null) {
-            Log.d("ChatActivity/select", "get picture ${it.path}")
-
-            val filename = "${it.hashCode()}.png"
+            val filename = "${it.hashCode()}"
 
             val photoBmp = MediaStore.Images.Media.getBitmap(contentResolver, it)
-            ResourcesLoader.saveImage(this, filename, photoBmp)
-            val message = sendNormalImg(filename)
-            messageList!!.add(message)
-            recyclerView.adapter?.notifyItemChanged(messageList!!.size - 1)
+
+            SResourcesPreserver.saveImage(this, filename, photoBmp)
+
+            messageList.add(sendNormalImg(filename, System.currentTimeMillis()))
+
+            recyclerView.adapter?.notifyItemChanged(messageList.size - 1)
 
             try {
                 Thread {
@@ -59,16 +85,11 @@ class ChatActivity : AppCompatActivity(), View.OnClickListener {
                         .setType(MessageBuilder.Type.IMAGE)
                         .build()
 
-                    val res = DataSource.sendImg(m, photoBmp)
+                    val res = DataSource.sendImage(m, photoBmp)
 
                     if (res is Result.Success) {
-                        // success
-                        Log.d("ChatActivity", "Say to '$tarUid': '$filename'")
-                        RunTimeData.runTimeMessage.push(
-                            tarUid,
-                            "${this.getString(R.string.you)}: ${this.getString(R.string.picture)}",
-                            System.currentTimeMillis()
-                        )
+                        SRuntimeData.SMessageBox[tarUid] =
+                            "${this.getString(R.string.you)}: ${this.getString(R.string.picture)}"
                     } else {
                         this.runOnUiThread {
                             Toast.makeText(this, R.string.send_failed, Toast.LENGTH_SHORT).show()
@@ -76,11 +97,9 @@ class ChatActivity : AppCompatActivity(), View.OnClickListener {
                     }
                 }.start()
             } catch (e: java.lang.Exception) {
-                e.printStackTrace()
+                Log.e("ChatActivity/select/Thread", "$e")
             }
         }
-
-
     }
 
     /**
@@ -89,10 +108,6 @@ class ChatActivity : AppCompatActivity(), View.OnClickListener {
      * type == 1 means send message.
      */
     private var functionKeyType = 0
-
-    private lateinit var popupMenu: PopupMenu
-
-    private lateinit var functionMenu: PopupMenu
 
     companion object {
         /**
@@ -115,21 +130,18 @@ class ChatActivity : AppCompatActivity(), View.OnClickListener {
         bindAdapter()
     }
 
+    /**
+     * init tar_uid title messageList
+     */
     private fun initData() {
-        try {
-            tarUid = intent.getSerializableExtra("tarUid") as String
-            displayTitle = RunTimeData.runTimeContacts[tarUid]!!.displayName
-
-            if (!runTimeMessageList.containsKey(tarUid))
-                runTimeMessageList[tarUid] = ArrayList()
-            messageList = runTimeMessageList[tarUid]
-
-        } catch (e: Exception) {
-            e.printStackTrace()
-            Toast.makeText(this, R.string._404, Toast.LENGTH_LONG).show()
-        }
+        tarUid = intent.getSerializableExtra("tarUid") as String
+        title = SRuntimeData.SContacts[tarUid]!!.displayName
+        messageList = SMessageList[tarUid]
     }
 
+    /**
+     * bind views
+     */
     private fun bindViews() {
         // back icon
         val back: ImageView = findViewById(R.id.activity_chat_head_back)
@@ -138,21 +150,13 @@ class ChatActivity : AppCompatActivity(), View.OnClickListener {
         // menu icon
         val menu: ImageView = findViewById(R.id.activity_chat_head_menu)
         menu.setOnClickListener(this)
-        popupMenu = PopupMenu(this, menu)
-        popupMenu.menuInflater.inflate(R.menu.menu_chat, popupMenu.menu);
-        popupMenu.setOnMenuItemClickListener {
-
-            return@setOnMenuItemClickListener false
-        }
-        popupMenu.setOnDismissListener {
-
-        }
-
+        menuMenu = PopupMenu(this, menu)
+        menuMenu.menuInflater.inflate(R.menu.menu_chat, menuMenu.menu)
+        menuMenu.setOnMenuItemClickListener(this)
 
         // title
-        val title: TextView = findViewById(R.id.activity_chat_head_message_title)
-        title.text = displayTitle
-        title.setOnClickListener(this)
+        val tv: TextView = findViewById(R.id.activity_chat_head_message_title)
+        tv.text = title
 
         // video_call icon
         val call: ImageView = findViewById(R.id.activity_chat_foot_video_call)
@@ -166,26 +170,17 @@ class ChatActivity : AppCompatActivity(), View.OnClickListener {
         val functionKey: ImageView = findViewById(R.id.activity_chat_foot_function_keys)
         functionKey.setOnClickListener(this)
         functionMenu = PopupMenu(this, functionKey)
-        functionMenu.menuInflater.inflate(R.menu.munu_function, functionMenu.menu);
-        functionMenu.setOnMenuItemClickListener {
-            when(it.itemId) {
-                R.id.menu_function_location->{
-
-                }
-                else ->{}
-            }
-            return@setOnMenuItemClickListener false
-        }
-        functionMenu.setOnDismissListener {
-
-        }
-
+        functionMenu.menuInflater.inflate(R.menu.munu_function, functionMenu.menu)
+        functionMenu.setOnMenuItemClickListener(this)
 
         // message witch user inputs
         val editText: EditText = findViewById(R.id.activity_chat_foot_input)
         editText.doAfterTextChanged { onTextChanged(it.toString().length, functionKey) }
     }
 
+    /**
+     * Input edit view change
+     */
     private fun onTextChanged(count: Int, functionKey: ImageView) {
         functionKeyType = if (count > 0) {
             functionKey.setImageResource(R.drawable.ic_outline_send_24)
@@ -196,20 +191,25 @@ class ChatActivity : AppCompatActivity(), View.OnClickListener {
         }
     }
 
+    /**
+     * bind recyclerView
+     */
     private fun bindAdapter() {
         recyclerView = findViewById(R.id.activity_chat_message_recycler_view)
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = ChatMessageAdapter(this, tarUid)
-
     }
 
+    /**
+     * onclick
+     */
     override fun onClick(view: View?) {
         when (view?.id) {
             // activity_chat_head
             R.id.activity_chat_head_back -> this.finish()
-            R.id.activity_chat_head_menu -> onMenuClicked()
+            R.id.activity_chat_head_menu -> menuMenu.show()
             // activity_chat_foot
-            R.id.activity_chat_foot_video_call -> onVideoCallClicked()
+            R.id.activity_chat_foot_video_call -> {}
             R.id.activity_chat_foot_emoji_emotions -> onEmojiClicked()
             R.id.activity_chat_foot_function_keys -> onFunctionKeyClicked()
             // others
@@ -217,18 +217,9 @@ class ChatActivity : AppCompatActivity(), View.OnClickListener {
         }
     }
 
-    private fun onMenuClicked() {
-        popupMenu.show()
-    }
-
-    private fun onTitleClicked() {
-        Toast.makeText(this, R.string.NotFinished, Toast.LENGTH_SHORT).show()
-    }
-
-    private fun onVideoCallClicked() {
-        Toast.makeText(this, R.string.NotFinished, Toast.LENGTH_SHORT).show()
-    }
-
+    /**
+     * onclick emoji
+     */
     private fun onEmojiClicked() {
 
         val p = arrayOf(
@@ -247,25 +238,26 @@ class ChatActivity : AppCompatActivity(), View.OnClickListener {
 
     }
 
+    /**
+     * onclick function key
+     */
     private fun onFunctionKeyClicked() {
         when (functionKeyType) {
-            0 -> showFunctions()
+            0 -> functionMenu.show()
             1 -> sendMessage()
         }
     }
 
-    private fun showFunctions() {
-
-        Toast.makeText(this, R.string.NotFinished, Toast.LENGTH_SHORT).show()
-    }
-
+    /**
+     * onclick send message
+     */
     private fun sendMessage() {
         val editText = findViewById<EditText>(R.id.activity_chat_foot_input)
         val text = editText.text.toString()
-        if (text.isNotEmpty()) {
-            val message = sendNormalText(text)
-            messageList!!.add(message)
-            recyclerView.adapter?.notifyItemChanged(messageList!!.size - 1)
+        if (text.isNotEmpty() && text != "") {
+            val message = sendNormalText(text, System.currentTimeMillis())
+            messageList.add(message)
+            recyclerView.adapter?.notifyItemChanged(messageList.size - 1)
             editText.setText("")
             try {
                 Thread {
@@ -277,13 +269,7 @@ class ChatActivity : AppCompatActivity(), View.OnClickListener {
                     val res = DataSource.sendMessage(m)
 
                     if (res is Result.Success) {
-                        // success
-                        Log.d("ChatActivity", "Say to '$tarUid': '$text'")
-                        RunTimeData.runTimeMessage.push(
-                            tarUid,
-                            "${this.getString(R.string.you)}:$text",
-                            System.currentTimeMillis()
-                        )
+                        SRuntimeData.SMessageBox[tarUid] = "${this.getString(R.string.you)}: $text"
                     } else {
                         this.runOnUiThread {
                             Toast.makeText(this, R.string.send_failed, Toast.LENGTH_SHORT).show()
@@ -291,13 +277,22 @@ class ChatActivity : AppCompatActivity(), View.OnClickListener {
                     }
                 }.start()
             } catch (e: Exception) {
-                Log.d("Send Message error", e.toString())
                 Toast.makeText(this, R.string.send_failed, Toast.LENGTH_SHORT).show()
             }
         }
-        // scroll to bottom
-        recyclerView.scrollToPosition(messageList!!.size - 1)
+
+        recyclerView.scrollToPosition(messageList.size - 1)
     }
 
+    /**
+     * on PopupMenu item clicked
+     */
+    override fun onMenuItemClick(item: MenuItem?): Boolean {
+        when (item?.itemId) {
+            R.id.menu_function_location -> {}
+            else -> {}
+        }
+        return false
+    }
 
 }

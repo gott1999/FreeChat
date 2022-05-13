@@ -32,7 +32,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun init() {
-        // 获取组件
         bottomNavigationView = findViewById(R.id.main_navigation)
         page = findViewById(R.id.main_view_pager2)
 
@@ -51,30 +50,22 @@ class MainActivity : AppCompatActivity() {
         fragments.put(1, contactFragment)
         fragments.put(2, mineFragment)
 
-        // 获取 adapter
         page.adapter = MainViewPager2Adapter(fragments, this)
 
-        // 水平排布
         page.orientation = ViewPager2.ORIENTATION_HORIZONTAL
 
-        // offscreenPageLimit允许加载3个fragment。防止fragment被频繁回收
         page.offscreenPageLimit = 3
 
-        // 关闭用户输入(滑动)
-        page.isUserInputEnabled = false
+        page.isUserInputEnabled = true
 
-        // 设置viewPage2滑动监听 虽然已经禁用
         page.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
                 super.onPageSelected(position)
-                // 设置导航栏
                 bottomNavigationView.menu.getItem(position).isChecked = true
             }
         })
 
-        // 底部导航栏按钮监听
         bottomNavigationView.setOnItemSelectedListener {
-            // 设置view
             when (it.itemId) {
                 R.id.bottom_nav_message -> page.setCurrentItem(0, false)
                 R.id.bottom_nav_contact -> page.setCurrentItem(1, false)
@@ -83,5 +74,6 @@ class MainActivity : AppCompatActivity() {
             true
         }
     }
+
 
 }

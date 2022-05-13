@@ -10,9 +10,9 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import edu.xww.urchat.R
-import edu.xww.urchat.data.loader.LoaderManager
+import edu.xww.urchat.data.loader.SConversationLoader
 import edu.xww.urchat.ui.adapter.recyclerview.ContractAdapter
-import edu.xww.urchat.data.runtime.RunTimeData
+import edu.xww.urchat.data.runtime.SRuntimeData
 
 class ContactFragment(private val m_Context: Context) : BaseFragment(R.layout.fragment_contact) {
 
@@ -28,7 +28,6 @@ class ContactFragment(private val m_Context: Context) : BaseFragment(R.layout.fr
     @SuppressLint("NotifyDataSetChanged")
     override fun wake() {
         recyclerView.adapter?.notifyDataSetChanged()
-        Log.d("ContactFragment", "wakeup data:${RunTimeData.runTimeContacts.size}")
     }
 
     private fun setParams() {
@@ -40,11 +39,13 @@ class ContactFragment(private val m_Context: Context) : BaseFragment(R.layout.fr
         recyclerView.adapter = ContractAdapter(m_Context)
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private fun setRefreshListener() {
         swipeRefreshLayout.setOnRefreshListener {
             Handler(Looper.getMainLooper()).postDelayed({
-                LoaderManager.updateContact()
+                SConversationLoader.updateContact()
                 swipeRefreshLayout.isRefreshing = false
+                recyclerView.adapter?.notifyDataSetChanged()
             }, 1000)
         }
     }

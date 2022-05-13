@@ -61,4 +61,5 @@
     <string name="update_password">密码修改后重新登录要重新输入</string>
     <string name="update_positive">更新成功</string>
     <string name="sharp">#</string>
+    <string name="setting">设置</string>
 </resources>
