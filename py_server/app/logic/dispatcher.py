@@ -58,7 +58,6 @@ def tick(data: bytes, address: tuple):
     else:
         if np.config["RESPONSE"] == "CONTACT":
             addRelationship(np, address)
-            print(np)
         res = users.get_standard_valid_response()
 
     return serializer.serialize(res)
