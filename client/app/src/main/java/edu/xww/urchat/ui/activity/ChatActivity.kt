@@ -67,6 +67,7 @@ class ChatActivity : AppCompatActivity(), View.OnClickListener, PopupMenu.OnMenu
      */
     private val select = registerForActivityResult(ActivityResultContracts.GetContent()) {
         if (it != null) {
+            Log.d("ChatActivity/select/uri","$it")
             val filename = "${it.hashCode()}"
 
             val photoBmp = MediaStore.Images.Media.getBitmap(contentResolver, it)
