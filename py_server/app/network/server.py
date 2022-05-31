@@ -17,7 +17,8 @@ from app.config.serve import DEFAULT_IMAGE_UPLOAD_PATH
 
 class Server:
 
-    isListen = True
+    bisListen = True
+
 
     @staticmethod
     def initFolders():
@@ -43,10 +44,14 @@ class Server:
         skt = socket.socket(DEFAULT_INET, DEFAULT_STREAM)
         skt.bind(('', port))
         skt.listen(pool)
-        while Server.isListen:
+        while Server.bisListen:
             conn, address = skt.accept()
             threading.Thread(target=Server.handle, args=(conn, address)).start()
         log.Logger.log("Ivp4 server closed")
+
+    @staticmethod
+    def Stop():
+        Server.bisListen = False
 
     @staticmethod
     def handle(conn: socket, address):
@@ -62,8 +67,7 @@ class Server:
             conn.send(res)
             conn.send(b'#')
         except Exception as e:
-            log.Logger.error("ip=%s:%s by='handle' handle error" % address)
-            log.Logger.error(str(e))
+            log.Logger.error("ip=%s:%s by='handle' handle error" % address + str(e))
         finally:
             conn.close()
 
