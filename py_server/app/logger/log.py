@@ -14,17 +14,16 @@ class Logger:
             os.mkdir(PATH)
         if Logger.fileName is None:
             t = time.strftime('%Y年%m月%d日 %H时%M分%S秒', time.localtime())
-            Logger.fileName = './%s/%s.txt' % (PATH, t)
+            Logger.fileName = './%s/%s.html' % (PATH, t)
 
     @staticmethod
-    def write(msg):
+    def write(msg, color="#FFFFFF"):
         if Logger.fileName is None:
             Logger.init()
-        if not msg.endswith('\n'):
-            msg += '\n'
-        file = open(Logger.fileName, 'a')
-        file.write(msg)
-        file.close()
+        out = """<div style="background-color:%s;margin-top:20px;">%s</div>\n""" % (color, msg)
+        out_file = open(Logger.fileName, 'a')
+        out_file.write(out)
+        out_file.close()
 
     @staticmethod
     def log(msg=''):
@@ -36,13 +35,13 @@ class Logger:
     def error(msg=''):
         s = '[ERROR]: %s %s' % (Logger.getTime(), msg)
         print(s)
-        Logger.write(s)
+        Logger.write(s, "#FF0000")
 
     @staticmethod
     def warn(msg=''):
         s = '[WARN]: %s %s' % (Logger.getTime(), msg)
         print(s)
-        Logger.write(s)
+        Logger.write(s, "#CCFF33")
 
     @staticmethod
     def getTime():

@@ -2,7 +2,7 @@
 
 #### 环境
 
-基于python3.9
+基于python3.10
 
 使用Pycharm community
 

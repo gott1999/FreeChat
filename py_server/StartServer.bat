@@ -1,2 +1,2 @@
-python3 ./main.py ./
+python3 ./__main__.py ./
 pause 

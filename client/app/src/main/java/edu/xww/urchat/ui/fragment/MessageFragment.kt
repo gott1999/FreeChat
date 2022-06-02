@@ -42,11 +42,11 @@ class MessageFragment(private val m_Context: Context) : BaseFragment(R.layout.fr
     @SuppressLint("NotifyDataSetChanged")
     private fun setRefreshListener() {
         swipeRefreshLayout.setOnRefreshListener {
+            SConversationLoader.updateMessage()
             Handler(Looper.getMainLooper()).postDelayed({
-                SConversationLoader.updateMessage()
                 swipeRefreshLayout.isRefreshing = false
                 recyclerView.adapter?.notifyDataSetChanged()
-            }, 1000)
+            }, 3000)
         }
     }
 

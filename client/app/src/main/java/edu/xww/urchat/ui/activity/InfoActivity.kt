@@ -27,8 +27,10 @@ class InfoActivity : AppCompatActivity() {
         if (it != null) {
             try {
                 Thread {
-                    val filename = "${it.hashCode()}.png"
+
                     val photoBmp = MediaStore.Images.Media.getBitmap(contentResolver, it)
+                    val filename = "${it.hashCode()}.png"
+
                     SResourcesPreserver.saveImage(this, filename, photoBmp)
 
                     val res = DataSource.updateIcon(filename, photoBmp)

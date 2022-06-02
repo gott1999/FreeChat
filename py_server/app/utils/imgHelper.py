@@ -3,7 +3,7 @@
 import os
 from app.logger import log
 
-path = "../upload/img/%s"
+path = "./upload/img/%s"
 
 
 def getImage(name: str):

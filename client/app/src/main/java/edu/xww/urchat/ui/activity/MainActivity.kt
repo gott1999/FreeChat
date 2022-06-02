@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import edu.xww.urchat.R
+import edu.xww.urchat.network.source.SocketHelper.startClientListener
 import edu.xww.urchat.ui.adapter.viewpager.MainViewPager2Adapter
 import edu.xww.urchat.ui.fragment.ContactFragment
 import edu.xww.urchat.ui.fragment.MessageFragment
@@ -29,6 +30,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         init()
+        // startClientListener()
     }
 
     private fun init() {

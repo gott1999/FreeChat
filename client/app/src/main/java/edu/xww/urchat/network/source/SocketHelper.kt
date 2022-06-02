@@ -2,6 +2,7 @@ package edu.xww.urchat.network.source
 
 import android.util.Log
 import com.google.protobuf.ByteString
+import edu.xww.urchat.data.loader.SConversationLoader.updateMessage
 import edu.xww.urchat.data.runtime.SRuntimeData
 import edu.xww.urchat.network.dispatcher.ClientDispatcher
 import edu.xww.urchat.network.builder.ProtocBuilder
@@ -90,12 +91,8 @@ object SocketHelper {
                     val res = ProtocolOuterClass.Protocol.parseFrom(inputStream)
 
                     // send to client dispatcher
-                    thread { ClientDispatcher.tick(res) }.start()
+                    thread { updateMessage() }.start()
 
-                    // response positive
-                    val out = socket.getOutputStream()
-                    out.write(builder.buildValid().toByteArray())
-                    out.flush()
                 } catch (e: java.lang.Exception) {
 
                 } finally {
